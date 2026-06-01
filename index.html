@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Social Media App v0.3 Test</title>
+  <title>Social Media App v0.6 Test</title>
   <style>
     :root {
       color-scheme: dark;
@@ -108,7 +108,7 @@
       top: 0;
       z-index: 10;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 8px;
       padding: 8px 0 14px;
       background: linear-gradient(180deg, rgba(15, 17, 21, 0.96), rgba(15, 17, 21, 0.72));
@@ -392,6 +392,62 @@
       font-size: 0.76rem;
     }
 
+    .section-title {
+      margin: 18px 0 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .analysis-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .analysis-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 48px;
+      padding: 10px 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .analysis-row strong,
+    .analysis-row span {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .analysis-row span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .analysis-row.best {
+      border-color: rgba(212, 175, 55, 0.55);
+    }
+
+    .recommend-card {
+      margin-bottom: 14px;
+      padding: 15px;
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.13), rgba(26, 29, 36, 0.96));
+      border: 1px solid rgba(212, 175, 55, 0.38);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .recommend-card h2 {
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
     .notice {
       padding: 10px 12px;
       color: #e5d492;
@@ -462,10 +518,27 @@
       <button class="tab" data-view="ideas" type="button">Ideen</button>
       <button class="tab" data-view="planner" type="button">Planer</button>
       <button class="tab" data-view="analytics" type="button">Stats</button>
+      <button class="tab" data-view="generator" type="button">Generator</button>
+      <button class="tab" data-view="vault" type="button">Vault</button>
     </nav>
 
     <section id="dashboard" class="view active">
+      <div class="recommend-card">
+        <h2>Heute posten</h2>
+        <button class="primary" id="todayCoachButton" type="button">Was soll ich heute posten?</button>
+        <div class="list" id="todayRecommendation"></div>
+      </div>
       <div class="grid stats" id="stats"></div>
+      <h2 class="section-title">Pipeline</h2>
+      <div class="grid stats" id="pipelineStats"></div>
+      <h2 class="section-title">Dashboard Coach</h2>
+      <div class="analysis-list" id="coachList"></div>
+      <h2 class="section-title">Top Reels</h2>
+      <div class="analysis-list" id="topReels"></div>
+      <h2 class="section-title">Kategorieanalyse</h2>
+      <div class="analysis-list" id="categoryAnalysis"></div>
+      <h2 class="section-title">Hook Analyse</h2>
+      <div class="analysis-list" id="hookAnalysis"></div>
       <div class="panel">
         <h2>Naechste Reels</h2>
         <div class="list" id="nextReels"></div>
@@ -486,6 +559,26 @@
           </label>
           <div class="row">
             <label>
+              Vault Hook
+              <select id="ideaHookTemplate"></select>
+            </label>
+            <label>
+              Vault Caption
+              <select id="ideaCaptionTemplate"></select>
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Vault CTA
+              <select id="ideaCtaTemplate"></select>
+            </label>
+            <label>
+              Vault Hashtags
+              <select id="ideaHashtagTemplate"></select>
+            </label>
+          </div>
+          <div class="row">
+            <label>
               Kategorie
               <select id="category">
                 <option>Fitness</option>
@@ -499,8 +592,10 @@
               Status
               <select id="status">
                 <option>Idee</option>
+                <option>Skript</option>
                 <option>Gefilmt</option>
                 <option>Geschnitten</option>
+                <option>Geplant</option>
                 <option>Hochgeladen</option>
               </select>
             </label>
@@ -522,6 +617,70 @@
     <section id="planner" class="view">
       <div class="filters" id="statusFilters"></div>
       <div class="list" id="plannerList"></div>
+    </section>
+
+    <section id="generator" class="view">
+      <div class="content-grid">
+        <form class="panel form" id="generatorForm">
+          <h2>Reel-Ideen-Generator</h2>
+          <label>
+            Kategorie
+            <select id="generatorCategory">
+              <option>Push</option>
+              <option>Pull</option>
+              <option>Legs</option>
+              <option>Oberkörper</option>
+              <option>Arme</option>
+              <option>Lifestyle</option>
+              <option>Motivation</option>
+            </select>
+          </label>
+          <label>
+            Hook-Typ
+            <select id="generatorHookType">
+              <option>Fehler</option>
+              <option>Tutorial</option>
+              <option>Motivation</option>
+              <option>Transformation</option>
+              <option>Provokation</option>
+              <option>Sonstiges</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">Ideen generieren</button>
+          <p class="notice">Lokale Vorlagen, keine externe KI/API.</p>
+        </form>
+        <div class="list" id="generatorList"></div>
+      </div>
+    </section>
+
+    <section id="vault" class="view">
+      <div class="content-grid">
+        <form class="panel form" id="vaultForm">
+          <h2>Content Vault</h2>
+          <label>
+            Typ
+            <select id="vaultType">
+              <option>Hook</option>
+              <option>Caption</option>
+              <option>CTA</option>
+              <option>Hashtag-Set</option>
+            </select>
+          </label>
+          <label>
+            Titel
+            <input id="vaultTitle" autocomplete="off" maxlength="90" required placeholder="Vorlagenname">
+          </label>
+          <label>
+            Vorlage
+            <textarea id="vaultText" maxlength="900" required placeholder="Text, CTA oder Hashtags"></textarea>
+          </label>
+          <button class="primary" type="submit">Vorlage speichern</button>
+        </form>
+        <div>
+          <div class="filters" id="vaultFilters"></div>
+          <div class="list" id="vaultList"></div>
+        </div>
+      </div>
     </section>
 
     <section id="analytics" class="view">
@@ -558,6 +717,17 @@
               <input id="statsSong" autocomplete="off" maxlength="90" placeholder="Audio / Trend">
             </label>
           </div>
+          <label>
+            Hook-Typ
+            <select id="statsHookType">
+              <option>Fehler</option>
+              <option>Tutorial</option>
+              <option>Motivation</option>
+              <option>Transformation</option>
+              <option>Provokation</option>
+              <option>Sonstiges</option>
+            </select>
+          </label>
           <div class="row">
             <label>
               Views
@@ -610,16 +780,23 @@
   </main>
 
   <script>
-    const STORAGE_KEY = "social-media-app-v0_3";
-    const LEGACY_STORAGE_KEY = "social-media-app-v0_2";
+    const STORAGE_KEY = "social-media-app-v0_6";
+    const LEGACY_STORAGE_KEY = "social-media-app-v0_5";
     const SCREENSHOT_MAX_BYTES = 750 * 1024;
-    const statuses = ["Idee", "Gefilmt", "Geschnitten", "Hochgeladen"];
-    const categories = ["Alle", "Fitness", "Food", "Behind the Scenes", "Education", "Personal"];
+    const statuses = ["Idee", "Skript", "Gefilmt", "Geschnitten", "Geplant", "Hochgeladen"];
+    const categories = ["Alle", "Push", "Pull", "Legs", "Oberkörper", "Arme", "Lifestyle", "Motivation", "Fitness", "Food", "Behind the Scenes", "Education", "Personal"];
+    const hookTypes = ["Fehler", "Tutorial", "Motivation", "Transformation", "Provokation", "Sonstiges"];
+    const vaultTypes = ["Alle", "Hook", "Caption", "CTA", "Hashtag-Set"];
     let activeCategory = "Alle";
     let activeStatus = "Alle";
+    let activeVaultType = "Alle";
     let state = loadState();
     let items = state.items;
     let reelStats = state.reelStats;
+    let vault = state.vault;
+    let generatedIdeas = [];
+    let editingVaultId = null;
+    let todayRecommendation = null;
     let pendingScreenshot = null;
 
     const els = {
@@ -627,16 +804,33 @@
       views: document.querySelectorAll(".view"),
       form: document.getElementById("ideaForm"),
       statsForm: document.getElementById("statsForm"),
+      generatorForm: document.getElementById("generatorForm"),
+      vaultForm: document.getElementById("vaultForm"),
+      todayCoachButton: document.getElementById("todayCoachButton"),
+      todayRecommendation: document.getElementById("todayRecommendation"),
       title: document.getElementById("title"),
       notes: document.getElementById("notes"),
+      ideaHookTemplate: document.getElementById("ideaHookTemplate"),
+      ideaCaptionTemplate: document.getElementById("ideaCaptionTemplate"),
+      ideaCtaTemplate: document.getElementById("ideaCtaTemplate"),
+      ideaHashtagTemplate: document.getElementById("ideaHashtagTemplate"),
       category: document.getElementById("category"),
       status: document.getElementById("status"),
       date: document.getElementById("date"),
+      generatorCategory: document.getElementById("generatorCategory"),
+      generatorHookType: document.getElementById("generatorHookType"),
+      generatorList: document.getElementById("generatorList"),
+      vaultType: document.getElementById("vaultType"),
+      vaultTitle: document.getElementById("vaultTitle"),
+      vaultText: document.getElementById("vaultText"),
+      vaultFilters: document.getElementById("vaultFilters"),
+      vaultList: document.getElementById("vaultList"),
       statsTitle: document.getElementById("statsTitle"),
       statsDate: document.getElementById("statsDate"),
       statsCategory: document.getElementById("statsCategory"),
       statsHook: document.getElementById("statsHook"),
       statsSong: document.getElementById("statsSong"),
+      statsHookType: document.getElementById("statsHookType"),
       statsViews: document.getElementById("statsViews"),
       statsLikes: document.getElementById("statsLikes"),
       statsComments: document.getElementById("statsComments"),
@@ -649,6 +843,11 @@
       screenshotHint: document.getElementById("screenshotHint"),
       readScreenshot: document.getElementById("readScreenshot"),
       stats: document.getElementById("stats"),
+      pipelineStats: document.getElementById("pipelineStats"),
+      coachList: document.getElementById("coachList"),
+      topReels: document.getElementById("topReels"),
+      categoryAnalysis: document.getElementById("categoryAnalysis"),
+      hookAnalysis: document.getElementById("hookAnalysis"),
       filters: document.getElementById("filters"),
       statusFilters: document.getElementById("statusFilters"),
       ideaList: document.getElementById("ideaList"),
@@ -665,28 +864,22 @@
         }
         const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
         if (legacyRaw) {
-          const legacyItems = JSON.parse(legacyRaw);
-          const normalizedItems = Array.isArray(legacyItems) ? legacyItems.map(normalizeItem) : seedItems();
-          return {
-            items: normalizedItems,
-            reelStats: normalizedItems
-              .filter((item) => item.status === "Hochgeladen")
-              .map(statsFromItem)
-          };
+          return normalizeState(JSON.parse(legacyRaw));
         }
-        return { items: seedItems(), reelStats: seedReelStats() };
+        return { items: seedItems(), reelStats: seedReelStats(), vault: seedVault() };
       } catch (error) {
-        return { items: seedItems(), reelStats: seedReelStats() };
+        return { items: seedItems(), reelStats: seedReelStats(), vault: seedVault() };
       }
     }
 
     function normalizeState(value) {
       if (Array.isArray(value)) {
-        return { items: value.map(normalizeItem), reelStats: [] };
+        return { items: value.map(normalizeItem), reelStats: [], vault: seedVault() };
       }
       return {
         items: Array.isArray(value.items) ? value.items.map(normalizeItem) : seedItems(),
-        reelStats: Array.isArray(value.reelStats) ? value.reelStats.map(normalizeStats) : []
+        reelStats: Array.isArray(value.reelStats) ? value.reelStats.map(normalizeStats) : [],
+        vault: Array.isArray(value.vault) ? value.vault.map(normalizeVaultItem) : seedVault()
       };
     }
 
@@ -695,6 +888,10 @@
         id: item.id || crypto.randomUUID(),
         title: item.title || "Unbenannte Idee",
         notes: item.notes || "",
+        hook: item.hook || "",
+        caption: item.caption || "",
+        cta: item.cta || "",
+        hashtags: item.hashtags || "",
         category: item.category || "Fitness",
         status: statuses.includes(item.status) ? item.status : "Idee",
         date: item.date || "",
@@ -733,6 +930,7 @@
           date: todayPlus(-2),
           category: "Food",
           hook: "Das esse ich, wenn ich keine Zeit habe.",
+          hookType: "Tutorial",
           song: "Clean beat",
           views: 12800,
           likes: 820,
@@ -748,6 +946,26 @@
       ];
     }
 
+    function seedVault() {
+      return [
+        { id: crypto.randomUUID(), type: "Hook", title: "Fehler Hook", text: "Du machst diesen Fehler bei deiner ersten schweren Übung.", createdAt: Date.now() },
+        { id: crypto.randomUUID(), type: "Caption", title: "Training kurz", text: "Kurz, schwer, sauber. Heute zählt nur die nächste gute Wiederholung.", createdAt: Date.now() },
+        { id: crypto.randomUUID(), type: "CTA", title: "Speichern", text: "Speicher dir das für dein nächstes Training.", createdAt: Date.now() },
+        { id: crypto.randomUUID(), type: "Hashtag-Set", title: "Bodybuilding", text: "#bodybuilding #gymdeutschland #hypertrophy #training", createdAt: Date.now() }
+      ];
+    }
+
+    function normalizeVaultItem(item) {
+      const type = vaultTypes.includes(item.type) && item.type !== "Alle" ? item.type : "Hook";
+      return {
+        id: item.id || crypto.randomUUID(),
+        type,
+        title: item.title || `${type} Vorlage`,
+        text: item.text || "",
+        createdAt: item.createdAt || Date.now()
+      };
+    }
+
     function statsFromItem(item) {
       return {
         id: crypto.randomUUID(),
@@ -755,6 +973,7 @@
         date: item.date || "",
         category: item.category || "Fitness",
         hook: item.notes || "",
+        hookType: "Sonstiges",
         song: "",
         views: 0,
         likes: 0,
@@ -776,6 +995,7 @@
         date: stat.date || "",
         category: stat.category || "Fitness",
         hook: stat.hook || "",
+        hookType: hookTypes.includes(stat.hookType) ? stat.hookType : "Sonstiges",
         song: stat.song || "",
         views: toNumber(stat.views),
         likes: toNumber(stat.likes),
@@ -797,7 +1017,7 @@
     }
 
     function persist() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, reelStats }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, reelStats, vault }));
       render();
     }
 
@@ -820,14 +1040,18 @@
 
     function renderStats() {
       const topReel = bestReel();
+      const savedReel = bestByMetric("saves");
       const stats = [
         { label: "Gesamt", value: items.length, detail: "Ideen und geplante Reels" },
-        { label: "Ideen", value: countStatus("Idee"), detail: "Noch offen" },
-        { label: "In Arbeit", value: countStatus("Gefilmt") + countStatus("Geschnitten"), detail: "Gefilmt oder im Schnitt" },
+        { label: "Pipeline", value: statuses.length, detail: "Status-Stufen aktiv" },
         { label: "Online", value: countStatus("Hochgeladen"), detail: "Hochgeladen im Planer" },
         { label: "Gesamtviews", value: formatNumber(sumMetric("views")), detail: "Alle getrackten Reels" },
         { label: "Beste Reel", value: topReel ? formatNumber(topReel.views) : "0", detail: topReel ? topReel.title : "Noch keine Daten" },
         { label: "Beste Kategorie", value: bestCategory(), detail: "Nach Gesamtviews" },
+        { label: "Bester Hook-Typ", value: bestHookType(), detail: "Nach durchschnittlichen Views" },
+        { label: "Meiste Saves", value: savedReel ? formatNumber(savedReel.saves) : "0", detail: savedReel ? savedReel.title : "Noch keine Daten" },
+        { label: "Vault", value: vault.length, detail: "Hooks, Captions, CTAs, Hashtags" },
+        { label: "Hooks", value: countVaultType("Hook"), detail: "Gespeicherte Hook-Vorlagen" },
         { label: "Ø Likes", value: averageMetric("likes"), detail: "Pro getracktem Reel" },
         { label: "Ø Saves", value: averageMetric("saves"), detail: "Pro getracktem Reel" }
       ];
@@ -844,6 +1068,32 @@
       return items.filter((item) => item.status === status).length;
     }
 
+    function countVaultType(type) {
+      return vault.filter((item) => item.type === type).length;
+    }
+
+    function renderPipelineStats() {
+      els.pipelineStats.innerHTML = statuses.map((status) => `
+        <article class="stat">
+          <strong>${countStatus(status)}</strong>
+          <span>${escapeHtml(status)}</span>
+          <small>${escapeHtml(pipelineDetail(status))}</small>
+        </article>
+      `).join("");
+    }
+
+    function pipelineDetail(status) {
+      const details = {
+        Idee: "Thema sammeln",
+        Skript: "Hook und Ablauf schreiben",
+        Gefilmt: "Material ist da",
+        Geschnitten: "Edit pruefen",
+        Geplant: "Upload terminiert",
+        Hochgeladen: "Live und messbar"
+      };
+      return details[status] || "";
+    }
+
     function sumMetric(metric) {
       return reelStats.reduce((sum, stat) => sum + toNumber(stat[metric]), 0);
     }
@@ -857,13 +1107,106 @@
       return [...reelStats].sort((a, b) => b.views - a.views)[0];
     }
 
-    function bestCategory() {
-      if (!reelStats.length) return "-";
-      const totals = reelStats.reduce((map, stat) => {
-        map[stat.category] = (map[stat.category] || 0) + toNumber(stat.views);
+    function bestByMetric(metric) {
+      return [...reelStats].sort((a, b) => toNumber(b[metric]) - toNumber(a[metric]))[0];
+    }
+
+    function topByMetric(metric) {
+      return [...reelStats]
+        .sort((a, b) => toNumber(b[metric]) - toNumber(a[metric]))
+        .slice(0, 5);
+    }
+
+    function averageGroups(groupKey) {
+      const groups = reelStats.reduce((map, stat) => {
+        const key = stat[groupKey] || "Sonstiges";
+        if (!map[key]) {
+          map[key] = { label: key, count: 0, views: 0, likes: 0, saves: 0 };
+        }
+        map[key].count += 1;
+        map[key].views += toNumber(stat.views);
+        map[key].likes += toNumber(stat.likes);
+        map[key].saves += toNumber(stat.saves);
         return map;
       }, {});
-      return Object.entries(totals).sort((a, b) => b[1] - a[1])[0][0];
+      return Object.values(groups)
+        .map((group) => ({
+          label: group.label,
+          count: group.count,
+          views: Math.round(group.views / group.count),
+          likes: Math.round(group.likes / group.count),
+          saves: Math.round(group.saves / group.count)
+        }))
+        .sort((a, b) => b.views - a.views);
+    }
+
+    function bestCategory() {
+      return averageGroups("category")[0]?.label || "-";
+    }
+
+    function bestHookType() {
+      return averageGroups("hookType")[0]?.label || "-";
+    }
+
+    function renderAnalysisRow(title, value, detail, isBest = false) {
+      return `
+        <article class="analysis-row${isBest ? " best" : ""}">
+          <div>
+            <strong>${escapeHtml(title)}</strong>
+            <span>${escapeHtml(detail)}</span>
+          </div>
+          <strong>${escapeHtml(value)}</strong>
+        </article>
+      `;
+    }
+
+    function renderTopReels() {
+      const blocks = [
+        ["Top 5 Views", "views"],
+        ["Top 5 Saves", "saves"],
+        ["Top 5 Likes", "likes"]
+      ];
+      els.topReels.innerHTML = blocks.map(([title, metric]) => {
+        const rows = topByMetric(metric).map((stat, index) =>
+          renderAnalysisRow(`${index + 1}. ${stat.title}`, formatNumber(stat[metric]), `${stat.category} | ${stat.hookType}`)
+        ).join("");
+        return renderAnalysisRow(title, "", "Automatisch aus gespeicherten Reel-Stats") + (rows || renderAnalysisRow("Keine Daten", "0", metric));
+      }).join("");
+    }
+
+    function renderCategoryAnalysis() {
+      const groups = averageGroups("category");
+      els.categoryAnalysis.innerHTML = groups.length
+        ? groups.map((group, index) => renderAnalysisRow(
+            group.label,
+            `${formatNumber(group.views)} Views`,
+            `Ø Likes ${formatNumber(group.likes)} | Ø Saves ${formatNumber(group.saves)} | ${group.count} Reels`,
+            index === 0
+          )).join("")
+        : renderAnalysisRow("Keine Kategorie-Daten", "0", "Noch keine Reel-Statistiken gespeichert");
+    }
+
+    function renderHookAnalysis() {
+      const groups = averageGroups("hookType");
+      els.hookAnalysis.innerHTML = groups.length
+        ? groups.map((group, index) => renderAnalysisRow(
+            group.label,
+            `${formatNumber(group.views)} Views`,
+            `Ø Likes ${formatNumber(group.likes)} | Ø Saves ${formatNumber(group.saves)} | ${group.count} Reels`,
+            index === 0
+          )).join("")
+        : renderAnalysisRow("Keine Hook-Daten", "0", "Noch keine Reel-Statistiken gespeichert");
+    }
+
+    function renderCoach() {
+      const topViews = bestByMetric("views");
+      const topSaves = bestByMetric("saves");
+      els.coachList.innerHTML = [
+        renderAnalysisRow("Beste Kategorie", bestCategory(), "Mehr davon testen"),
+        renderAnalysisRow("Bester Hook-Typ", bestHookType(), "Als naechste Hook priorisieren"),
+        renderAnalysisRow("Meiste Saves", topSaves ? topSaves.title : "-", topSaves ? `${formatNumber(topSaves.saves)} Saves` : "Noch keine Daten"),
+        renderAnalysisRow("Meiste Views", topViews ? topViews.title : "-", topViews ? `${formatNumber(topViews.views)} Views` : "Noch keine Daten")
+      ].join("");
     }
 
     function itemCard(item) {
@@ -879,6 +1222,10 @@
           <span class="badge">${item.date ? formatDate(item.date) : "Ohne Datum"}</span>
         </div>
         <p class="notes">${escapeHtml(item.notes || "Keine Notizen")}</p>
+        ${item.hook ? `<p class="notes">Hook: ${escapeHtml(item.hook)}</p>` : ""}
+        ${item.caption ? `<p class="notes">Caption: ${escapeHtml(item.caption)}</p>` : ""}
+        ${item.cta ? `<p class="notes">CTA: ${escapeHtml(item.cta)}</p>` : ""}
+        ${item.hashtags ? `<p class="notes">Hashtags: ${escapeHtml(item.hashtags)}</p>` : ""}
         <div class="actions">
           <button class="secondary" type="button" data-action="next">Weiter</button>
           <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
@@ -899,6 +1246,7 @@
         </div>
         <div class="meta">
           <span class="badge">${escapeHtml(stat.category)}</span>
+          <span class="badge">${escapeHtml(stat.hookType || "Sonstiges")}</span>
           <span class="badge">${stat.date ? formatDate(stat.date) : "Ohne Datum"}</span>
           <span class="badge">${escapeHtml(stat.song || "Kein Song")}</span>
         </div>
@@ -946,6 +1294,287 @@
         return;
       }
       sorted.forEach((stat) => els.statsList.appendChild(statsCard(stat)));
+    }
+
+    function generatorTemplates(category, hookType) {
+      const categoryAngles = {
+        Push: ["Bankdrücken", "Schulterdrücken", "Dips", "Brustpumpe", "Trizeps-Finisher"],
+        Pull: ["Klimmzüge", "Rudern", "Latziehen", "Rear Delts", "Bizeps-Finisher"],
+        Legs: ["Kniebeugen", "Beinpresse", "RDLs", "Leg Curl", "Waden"],
+        Oberkörper: ["Upper Day", "Supersatz", "Schulterbreite", "Rückenbreite", "Arme am Ende"],
+        Arme: ["Bizeps", "Trizeps", "Pump Satz", "Cable Curl", "Overhead Extension"],
+        Lifestyle: ["Meal Prep", "Gym Bag", "Routine", "Regeneration", "Alltag"],
+        Motivation: ["Disziplin", "Plateau", "Comeback", "Mindset", "Progress"]
+      };
+      const hookAngles = {
+        Fehler: ["vermeiden musst", "wahrscheinlich falsch machst"],
+        Tutorial: ["sauber ausführst", "in 3 Schritten lernst"],
+        Motivation: ["auch an schlechten Tagen durchziehst", "wieder ernst nimmst"],
+        Transformation: ["messbar besser machst", "von schwach zu stabil bringst"],
+        Provokation: ["nicht hören willst", "dir niemand im Gym sagt"],
+        Sonstiges: ["heute testen kannst", "schnell verbessern kannst"]
+      };
+      const moves = categoryAngles[category] || categoryAngles.Push;
+      const hooks = hookAngles[hookType] || hookAngles.Sonstiges;
+      return Array.from({ length: 10 }, (_, index) => {
+        const move = moves[index % moves.length];
+        const hook = hooks[index % hooks.length];
+        return {
+          id: crypto.randomUUID(),
+          title: `${category}: ${move} - ${hook}`,
+          notes: `Hook-Typ: ${hookType}\nAufbau: Hook, kurzer Kontext, 2-3 klare Punkte, CTA.`,
+          category,
+          status: "Idee",
+          hookType
+        };
+      });
+    }
+
+    function renderGeneratorIdeas() {
+      els.generatorList.innerHTML = "";
+      if (!generatedIdeas.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Waehle Kategorie und Hook-Typ, dann generiere lokale Reel-Ideen.";
+        els.generatorList.appendChild(empty);
+        return;
+      }
+      generatedIdeas.forEach((idea) => {
+        const article = document.createElement("article");
+        article.className = "idea";
+        article.innerHTML = `
+          <div class="idea-head">
+            <h3>${escapeHtml(idea.title)}</h3>
+            <span class="badge status">${escapeHtml(idea.hookType)}</span>
+          </div>
+          <div class="meta">
+            <span class="badge">${escapeHtml(idea.category)}</span>
+            <span class="badge">Lokale Vorlage</span>
+          </div>
+          <p class="notes">${escapeHtml(idea.notes)}</p>
+          <div class="actions">
+            <button class="secondary" type="button" data-action="saveIdea">Als Idee speichern</button>
+            <button class="secondary" type="button" data-action="pipeline">In Pipeline</button>
+          </div>
+        `;
+        article.querySelector('[data-action="saveIdea"]').addEventListener("click", () => saveGeneratedIdea(idea, "Idee"));
+        article.querySelector('[data-action="pipeline"]').addEventListener("click", () => saveGeneratedIdea(idea, "Skript"));
+        els.generatorList.appendChild(article);
+      });
+    }
+
+    function saveGeneratedIdea(idea, status) {
+      items = [{
+        id: crypto.randomUUID(),
+        title: idea.title,
+        notes: idea.notes,
+        hook: idea.title,
+        caption: "",
+        cta: "",
+        hashtags: "",
+        category: idea.category,
+        status,
+        date: "",
+        createdAt: Date.now()
+      }, ...items];
+      persist();
+    }
+
+    function renderVaultSelectors() {
+      setTemplateSelect(els.ideaHookTemplate, "Hook");
+      setTemplateSelect(els.ideaCaptionTemplate, "Caption");
+      setTemplateSelect(els.ideaCtaTemplate, "CTA");
+      setTemplateSelect(els.ideaHashtagTemplate, "Hashtag-Set");
+    }
+
+    function setTemplateSelect(select, type) {
+      select.innerHTML = `<option value="">Keine Vorlage</option>` + vault
+        .filter((item) => item.type === type)
+        .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.title)}</option>`)
+        .join("");
+    }
+
+    function selectedVaultText(id) {
+      return vault.find((item) => item.id === id)?.text || "";
+    }
+
+    function vaultCard(item) {
+      const article = document.createElement("article");
+      article.className = "idea";
+      article.innerHTML = `
+        <div class="idea-head">
+          <h3>${escapeHtml(item.title)}</h3>
+          <span class="badge status">${escapeHtml(item.type)}</span>
+        </div>
+        <p class="notes">${escapeHtml(item.text)}</p>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="use">Uebernehmen</button>
+          <button class="secondary" type="button" data-action="copy">Kopieren</button>
+          <button class="secondary" type="button" data-action="edit">Bearbeiten</button>
+          <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
+        </div>
+      `;
+      article.querySelector('[data-action="use"]').addEventListener("click", () => applyVaultItem(item));
+      article.querySelector('[data-action="copy"]').addEventListener("click", () => copyVaultText(item.text));
+      article.querySelector('[data-action="edit"]').addEventListener("click", () => editVaultItem(item));
+      article.querySelector('[data-action="delete"]').addEventListener("click", () => deleteVaultItem(item.id));
+      return article;
+    }
+
+    function renderVaultList() {
+      els.vaultList.innerHTML = "";
+      const filtered = activeVaultType === "Alle" ? vault : vault.filter((item) => item.type === activeVaultType);
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Noch keine Vorlage fuer diesen Typ.";
+        els.vaultList.appendChild(empty);
+        return;
+      }
+      filtered.forEach((item) => els.vaultList.appendChild(vaultCard(item)));
+    }
+
+    function applyVaultItem(item) {
+      if (item.type === "Hook") els.title.value = item.text;
+      if (item.type === "Caption") els.notes.value = [els.notes.value, `Caption: ${item.text}`].filter(Boolean).join("\n");
+      if (item.type === "CTA") els.notes.value = [els.notes.value, `CTA: ${item.text}`].filter(Boolean).join("\n");
+      if (item.type === "Hashtag-Set") els.notes.value = [els.notes.value, `Hashtags: ${item.text}`].filter(Boolean).join("\n");
+      setView("ideas");
+    }
+
+    function copyVaultText(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+    }
+
+    function editVaultItem(item) {
+      editingVaultId = item.id;
+      els.vaultType.value = item.type;
+      els.vaultTitle.value = item.title;
+      els.vaultText.value = item.text;
+    }
+
+    function deleteVaultItem(id) {
+      vault = vault.filter((item) => item.id !== id);
+      if (editingVaultId === id) editingVaultId = null;
+      persist();
+    }
+
+    function lastPostedCategory() {
+      return [...reelStats]
+        .filter((stat) => stat.date)
+        .sort((a, b) => b.date.localeCompare(a.date))[0]?.category || "";
+    }
+
+    function recommendedCategory() {
+      const preferred = bestCategory();
+      const fallback = "Push";
+      const last = lastPostedCategory();
+      const alternatives = averageGroups("category").map((group) => group.label).filter((label) => label !== last);
+      if (preferred && preferred !== "-" && preferred !== last) return preferred;
+      return alternatives[0] || preferred || fallback;
+    }
+
+    function recommendedHookType() {
+      const preferred = bestHookType();
+      return preferred && preferred !== "-" ? preferred : "Tutorial";
+    }
+
+    function pickPipelineIdea(category) {
+      const priorities = [["Geschnitten", "Geplant"], ["Gefilmt"], ["Skript"]];
+      for (const group of priorities) {
+        const candidates = items.filter((item) => group.includes(item.status));
+        const alternate = candidates.find((item) => item.category !== lastPostedCategory());
+        const matching = candidates.find((item) => item.category === category);
+        if (matching) return matching;
+        if (alternate) return alternate;
+        if (candidates[0]) return candidates[0];
+      }
+      return null;
+    }
+
+    function vaultTextByType(type) {
+      return vault.find((item) => item.type === type)?.text || "";
+    }
+
+    function buildTodayRecommendation() {
+      const category = recommendedCategory();
+      const hookType = recommendedHookType();
+      const pipelineIdea = pickPipelineIdea(category);
+      const generated = generatorTemplates(category, hookType)[0];
+      const source = pipelineIdea || generated;
+      const hook = vaultTextByType("Hook") || source.hook || source.title;
+      const cta = vaultTextByType("CTA") || "Speicher dir das fuer dein naechstes Training.";
+      const hashtags = vaultTextByType("Hashtag-Set") || "#bodybuilding #training #gym";
+      const reasonParts = [
+        reelStats.length ? "Kategorie und Hook-Typ basieren auf deinen bisherigen Reel-Statistiken." : "Es gibt noch keine Statistikdaten, daher nutzt die App lokale Standardempfehlungen.",
+        pipelineIdea ? `Pipeline bevorzugt Status ${pipelineIdea.status}.` : "Keine passende offene Pipeline gefunden, daher lokale Generator-Idee.",
+        lastPostedCategory() && category !== lastPostedCategory() ? "Die zuletzt gepostete Kategorie wurde nach Möglichkeit vermieden." : "Keine bessere Kategorie-Alternative gefunden."
+      ];
+      return {
+        category,
+        hookType,
+        title: source.title,
+        notes: source.notes || "Lokale Empfehlung fuer den heutigen Post.",
+        hook,
+        cta,
+        hashtags,
+        sourceStatus: pipelineIdea ? pipelineIdea.status : "Neue Idee",
+        reason: reasonParts.join(" ")
+      };
+    }
+
+    function renderTodayRecommendation() {
+      els.todayRecommendation.innerHTML = "";
+      if (!todayRecommendation) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Noch keine Empfehlung generiert.";
+        els.todayRecommendation.appendChild(empty);
+        return;
+      }
+      const article = document.createElement("article");
+      article.className = "idea";
+      article.innerHTML = `
+        <div class="idea-head">
+          <h3>${escapeHtml(todayRecommendation.title)}</h3>
+          <span class="badge status">${escapeHtml(todayRecommendation.sourceStatus)}</span>
+        </div>
+        <div class="meta">
+          <span class="badge">${escapeHtml(todayRecommendation.category)}</span>
+          <span class="badge">${escapeHtml(todayRecommendation.hookType)}</span>
+        </div>
+        <p class="notes">Hook: ${escapeHtml(todayRecommendation.hook)}</p>
+        <p class="notes">CTA: ${escapeHtml(todayRecommendation.cta)}</p>
+        <p class="notes">Hashtags: ${escapeHtml(todayRecommendation.hashtags)}</p>
+        <p class="notes">${escapeHtml(todayRecommendation.reason)}</p>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="saveToday">Empfehlung als Idee speichern</button>
+          <button class="secondary" type="button" data-action="pipelineToday">Empfehlung in Pipeline übernehmen</button>
+        </div>
+      `;
+      article.querySelector('[data-action="saveToday"]').addEventListener("click", () => saveTodayRecommendation("Idee"));
+      article.querySelector('[data-action="pipelineToday"]').addEventListener("click", () => saveTodayRecommendation("Skript"));
+      els.todayRecommendation.appendChild(article);
+    }
+
+    function saveTodayRecommendation(status) {
+      if (!todayRecommendation) return;
+      items = [{
+        id: crypto.randomUUID(),
+        title: todayRecommendation.title,
+        notes: `${todayRecommendation.notes}\n${todayRecommendation.reason}`,
+        hook: todayRecommendation.hook,
+        caption: "",
+        cta: todayRecommendation.cta,
+        hashtags: todayRecommendation.hashtags,
+        category: todayRecommendation.category,
+        status,
+        date: "",
+        createdAt: Date.now()
+      }, ...items];
+      persist();
     }
 
     function renderIdeas() {
@@ -1078,15 +1707,33 @@
         activeStatus = value;
         render();
       });
+      renderChips(els.vaultFilters, vaultTypes, activeVaultType, (value) => {
+        activeVaultType = value;
+        render();
+      });
+      renderTodayRecommendation();
       renderStats();
+      renderPipelineStats();
+      renderCoach();
+      renderTopReels();
+      renderCategoryAnalysis();
+      renderHookAnalysis();
       renderIdeas();
       renderPlanner();
       renderNextReels();
       renderStatsList();
+      renderGeneratorIdeas();
+      renderVaultSelectors();
+      renderVaultList();
     }
 
     els.tabs.forEach((tab) => {
       tab.addEventListener("click", () => setView(tab.dataset.view));
+    });
+
+    els.todayCoachButton.addEventListener("click", () => {
+      todayRecommendation = buildTodayRecommendation();
+      renderTodayRecommendation();
     });
 
     els.form.addEventListener("submit", (event) => {
@@ -1096,6 +1743,10 @@
           id: crypto.randomUUID(),
           title: els.title.value.trim(),
           notes: els.notes.value.trim(),
+          hook: selectedVaultText(els.ideaHookTemplate.value),
+          caption: selectedVaultText(els.ideaCaptionTemplate.value),
+          cta: selectedVaultText(els.ideaCtaTemplate.value),
+          hashtags: selectedVaultText(els.ideaHashtagTemplate.value),
           category: els.category.value,
           status: els.status.value,
           date: els.date.value,
@@ -1104,6 +1755,29 @@
         ...items
       ];
       els.form.reset();
+      persist();
+    });
+
+    els.generatorForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      generatedIdeas = generatorTemplates(els.generatorCategory.value, els.generatorHookType.value);
+      renderGeneratorIdeas();
+    });
+
+    els.vaultForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const entry = {
+        id: editingVaultId || crypto.randomUUID(),
+        type: els.vaultType.value,
+        title: els.vaultTitle.value.trim(),
+        text: els.vaultText.value.trim(),
+        createdAt: Date.now()
+      };
+      vault = editingVaultId
+        ? vault.map((item) => item.id === editingVaultId ? entry : item)
+        : [entry, ...vault];
+      editingVaultId = null;
+      els.vaultForm.reset();
       persist();
     });
 
@@ -1122,6 +1796,7 @@
           date: els.statsDate.value,
           category: els.statsCategory.value,
           hook: els.statsHook.value.trim(),
+          hookType: els.statsHookType.value,
           song: els.statsSong.value.trim(),
           views: toNumber(els.statsViews.value),
           likes: toNumber(els.statsLikes.value),
