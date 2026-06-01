@@ -4,17 +4,21 @@ Mobile-first Web-App zur lokalen Planung von Social-Media-Ideen und Reels.
 
 ## Version
 
-Aktuelle Testversion: `v0.6`
+Aktuelle Testversion: `v0.8`
 
 Datei:
 
-`01_APP/tests/social-media-app-v0_6-test.html`
+`01_APP/tests/social-media-app-v0_8-test.html`
 
 Vorversion:
 
-`01_APP/tests/social-media-app-v0_5-test.html`
+`01_APP/tests/social-media-app-v0_7-test.html`
 
 Weitere Vorversionen:
+
+`01_APP/tests/social-media-app-v0_6-test.html`
+
+`01_APP/tests/social-media-app-v0_5-test.html`
 
 `01_APP/tests/social-media-app-v0_4-test.html`
 
@@ -24,9 +28,20 @@ Weitere Vorversionen:
 
 `01_APP/tests/social-media-app-v0_1-test.html`
 
-## Funktionen v0.6
+## Funktionen v0.8
 
-- Dashboard mit Gesamtstatus
+- Desktop-UX-Verbesserung ohne neue Kernfeatures
+- Breiteres Desktop-Layout mit bis zu ca. 1480px Inhaltsbreite
+- Heute-Tab als echtes Dashboard mit Coach, Kacheln und Quick Actions
+- Filter-Chips umbrechen auf Desktop statt horizontalem Scrollen
+- Kompaktere Listen-/Kartenansicht fuer Ideen, Pipeline, Statistik und Vault
+- Ruhigere Vault-Aktionen ueber Details/Aktionsbereich
+- Aufgeraeumte UX-Version ohne entfernte Funktionen
+- Reduzierte Startseite mit Heute-posten-Coach, Pipeline-Kurzstatus, Top-Empfehlung und Schnellbuttons
+- Klare Navigation: Heute, Ideen, Pipeline, Statistik, Vault
+- Erweiterte Analysen als einklappbare Details
+- Formulare mit sichtbaren Basisfeldern und einklappbaren Mehr Optionen
+- Kompaktere Karten mit Details anzeigen
 - Heute-posten-Coach mit konkreter lokaler Posting-Empfehlung
 - Empfehlung mit Kategorie, Hook-Typ, Reel-Idee, Hook, CTA, Hashtags und Begruendung
 - Empfehlung kann als Idee gespeichert oder in die Pipeline uebernommen werden
@@ -61,7 +76,7 @@ Weitere Vorversionen:
 
 - Keine externen Abhaengigkeiten
 - Alles in einer HTML-Datei
-- Storage-Key: `social-media-app-v0_6`
-- v0.5-Daten werden beim ersten Laden der v0.6 moeglichst uebernommen
+- Storage-Key: `social-media-app-v0_8`
+- v0.7-Daten werden beim ersten Laden der v0.8 moeglichst uebernommen
 - OCR/AI ist noch nicht angebunden; Screenshot-Daten werden nicht automatisch ausgelesen
 - Keine Verbindung zu Personal-App, Public-App oder Apps-Script

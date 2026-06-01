@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.8 - 2026-06-01
+
+- Neue Testversion `social-media-app-v0_8-test.html` aus v0.7 erstellt.
+- Desktop-Layout auf bis zu ca. 1480px verbreitert.
+- Heute-Tab als zweispaltiges Desktop-Dashboard mit Coach, Kacheln und Quick Actions verbessert.
+- Filter-Chips auf Desktop mehrzeilig umbrechbar gemacht.
+- Karten, Stat-Kacheln und Buttons auf Desktop kompakter gestaltet.
+- Vault-Eintraege ruhiger gemacht und Aktionen in einen Details-/Aktionsbereich verschoben.
+- Generator bleibt einklappbar im Ideen-Bereich und wird weniger dominant dargestellt.
+- Storage-Key auf `social-media-app-v0_8` umgestellt.
+- Migration aus `social-media-app-v0_7` integriert.
+
+## v0.7 - 2026-06-01
+
+- Neue Testversion `social-media-app-v0_7-test.html` aus v0.6 erstellt.
+- Dashboard stark reduziert auf Heute-posten-Coach, Pipeline-Kurzstatus, Top-Empfehlung und Schnellbuttons.
+- Navigation auf Heute, Ideen, Pipeline, Statistik und Vault vereinfacht.
+- Reel-Ideen-Generator in den Ideen-Bereich verschoben und einklappbar gemacht.
+- Erweiterte Analysen in der Statistik als Details einklappbar gemacht.
+- Formulare mit `Mehr Optionen` vereinfacht.
+- Karten teilweise kompakter gestaltet und Zusatzinformationen hinter `Details anzeigen` gelegt.
+- Storage-Key auf `social-media-app-v0_7` umgestellt.
+- Migration aus `social-media-app-v0_6` integriert.
+
 ## v0.6 - 2026-06-01
 
 - Neue Testversion `social-media-app-v0_6-test.html` aus v0.5 erstellt.
