@@ -1,0 +1,1822 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Social Media App v0.6 Test</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0F1115;
+      --panel: #1A1D24;
+      --panel-soft: #232733;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f5f7fb;
+      --muted: #a2a8b4;
+      --accent: #D4AF37;
+      --accent-2: #b98d24;
+      --danger: #ff6b7a;
+      --shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      background: linear-gradient(180deg, #0F1115 0%, #151821 100%);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(100%, 760px);
+      min-height: 100svh;
+      margin: 0 auto;
+      padding: max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 8px 0 18px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      line-height: 1.12;
+    }
+
+    .subline {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .save-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: 0 10px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      padding: 8px 0 14px;
+      background: linear-gradient(180deg, rgba(15, 17, 21, 0.96), rgba(15, 17, 21, 0.72));
+      backdrop-filter: blur(16px);
+    }
+
+    .tab {
+      min-height: 42px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-weight: 750;
+      font-size: 0.82rem;
+    }
+
+    .tab.active {
+      color: #15110a;
+      background: var(--accent);
+      border-color: transparent;
+    }
+
+    .view {
+      display: none;
+      padding-top: 4px;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat,
+    .panel,
+    .idea {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stat {
+      min-height: 112px;
+      padding: 16px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.85rem;
+      line-height: 1;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .stat small {
+      display: block;
+      margin-top: 8px;
+      color: #d8c582;
+      font-size: 0.78rem;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .panel {
+      margin-top: 12px;
+      padding: 14px;
+    }
+
+    .panel h2 {
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+
+    .form {
+      display: grid;
+      gap: 10px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 12px;
+      color: var(--text);
+      background: #11141b;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(212, 175, 55, 0.75);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.14);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .primary {
+      min-height: 48px;
+      color: #15110a;
+      background: var(--accent);
+      border-radius: var(--radius);
+      font-weight: 850;
+    }
+
+    .secondary {
+      min-height: 40px;
+      color: var(--text);
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-weight: 750;
+    }
+
+    .danger {
+      color: var(--danger);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin: 12px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      min-height: 36px;
+      padding: 0 11px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-weight: 750;
+    }
+
+    .chip.active {
+      color: #15110a;
+      background: var(--accent-2);
+      border-color: transparent;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      padding-bottom: 24px;
+    }
+
+    .idea {
+      padding: 13px;
+    }
+
+    .idea-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .idea h3 {
+      font-size: 1rem;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 9px 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 760;
+    }
+
+    .badge.status {
+      color: #15110a;
+      background: var(--accent);
+      border-color: transparent;
+    }
+
+    .notes {
+      color: #d8dee9;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .empty {
+      padding: 28px 16px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      min-height: 58px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .metric strong,
+    .metric span {
+      display: block;
+    }
+
+    .metric strong {
+      font-size: 1rem;
+    }
+
+    .metric span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .section-title {
+      margin: 18px 0 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .analysis-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .analysis-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 48px;
+      padding: 10px 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .analysis-row strong,
+    .analysis-row span {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .analysis-row span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .analysis-row.best {
+      border-color: rgba(212, 175, 55, 0.55);
+    }
+
+    .recommend-card {
+      margin-bottom: 14px;
+      padding: 15px;
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.13), rgba(26, 29, 36, 0.96));
+      border: 1px solid rgba(212, 175, 55, 0.38);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .recommend-card h2 {
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .notice {
+      padding: 10px 12px;
+      color: #e5d492;
+      background: rgba(212, 175, 55, 0.09);
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      border-radius: var(--radius);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .preview {
+      display: none;
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #11141b;
+    }
+
+    .preview.active {
+      display: block;
+    }
+
+    .screenshot {
+      width: 100%;
+      max-height: 360px;
+      object-fit: cover;
+      margin: 12px 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #11141b;
+    }
+
+    @media (min-width: 720px) {
+      .app {
+        padding-inline: 24px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 330px 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>Social Studio</h1>
+        <p class="subline">Ideen, Reels und Uploads lokal planen.</p>
+      </div>
+      <div class="save-pill" aria-label="Lokale Speicherung aktiv">
+        <span class="dot"></span>
+        Lokal
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Hauptbereiche">
+      <button class="tab active" data-view="dashboard" type="button">Dashboard</button>
+      <button class="tab" data-view="ideas" type="button">Ideen</button>
+      <button class="tab" data-view="planner" type="button">Planer</button>
+      <button class="tab" data-view="analytics" type="button">Stats</button>
+      <button class="tab" data-view="generator" type="button">Generator</button>
+      <button class="tab" data-view="vault" type="button">Vault</button>
+    </nav>
+
+    <section id="dashboard" class="view active">
+      <div class="recommend-card">
+        <h2>Heute posten</h2>
+        <button class="primary" id="todayCoachButton" type="button">Was soll ich heute posten?</button>
+        <div class="list" id="todayRecommendation"></div>
+      </div>
+      <div class="grid stats" id="stats"></div>
+      <h2 class="section-title">Pipeline</h2>
+      <div class="grid stats" id="pipelineStats"></div>
+      <h2 class="section-title">Dashboard Coach</h2>
+      <div class="analysis-list" id="coachList"></div>
+      <h2 class="section-title">Top Reels</h2>
+      <div class="analysis-list" id="topReels"></div>
+      <h2 class="section-title">Kategorieanalyse</h2>
+      <div class="analysis-list" id="categoryAnalysis"></div>
+      <h2 class="section-title">Hook Analyse</h2>
+      <div class="analysis-list" id="hookAnalysis"></div>
+      <div class="panel">
+        <h2>Naechste Reels</h2>
+        <div class="list" id="nextReels"></div>
+      </div>
+    </section>
+
+    <section id="ideas" class="view">
+      <div class="content-grid">
+        <form class="panel form" id="ideaForm">
+          <h2>Neue Idee</h2>
+          <label>
+            Titel
+            <input id="title" autocomplete="off" maxlength="90" required placeholder="Hook oder Thema">
+          </label>
+          <label>
+            Notizen
+            <textarea id="notes" maxlength="600" placeholder="Script, Shotlist, CTA"></textarea>
+          </label>
+          <div class="row">
+            <label>
+              Vault Hook
+              <select id="ideaHookTemplate"></select>
+            </label>
+            <label>
+              Vault Caption
+              <select id="ideaCaptionTemplate"></select>
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Vault CTA
+              <select id="ideaCtaTemplate"></select>
+            </label>
+            <label>
+              Vault Hashtags
+              <select id="ideaHashtagTemplate"></select>
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Kategorie
+              <select id="category">
+                <option>Fitness</option>
+                <option>Food</option>
+                <option>Behind the Scenes</option>
+                <option>Education</option>
+                <option>Personal</option>
+              </select>
+            </label>
+            <label>
+              Status
+              <select id="status">
+                <option>Idee</option>
+                <option>Skript</option>
+                <option>Gefilmt</option>
+                <option>Geschnitten</option>
+                <option>Geplant</option>
+                <option>Hochgeladen</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Geplantes Datum
+            <input id="date" type="date">
+          </label>
+          <button class="primary" type="submit">Speichern</button>
+        </form>
+
+        <div>
+          <div class="filters" id="filters"></div>
+          <div class="list" id="ideaList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="planner" class="view">
+      <div class="filters" id="statusFilters"></div>
+      <div class="list" id="plannerList"></div>
+    </section>
+
+    <section id="generator" class="view">
+      <div class="content-grid">
+        <form class="panel form" id="generatorForm">
+          <h2>Reel-Ideen-Generator</h2>
+          <label>
+            Kategorie
+            <select id="generatorCategory">
+              <option>Push</option>
+              <option>Pull</option>
+              <option>Legs</option>
+              <option>Oberkörper</option>
+              <option>Arme</option>
+              <option>Lifestyle</option>
+              <option>Motivation</option>
+            </select>
+          </label>
+          <label>
+            Hook-Typ
+            <select id="generatorHookType">
+              <option>Fehler</option>
+              <option>Tutorial</option>
+              <option>Motivation</option>
+              <option>Transformation</option>
+              <option>Provokation</option>
+              <option>Sonstiges</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">Ideen generieren</button>
+          <p class="notice">Lokale Vorlagen, keine externe KI/API.</p>
+        </form>
+        <div class="list" id="generatorList"></div>
+      </div>
+    </section>
+
+    <section id="vault" class="view">
+      <div class="content-grid">
+        <form class="panel form" id="vaultForm">
+          <h2>Content Vault</h2>
+          <label>
+            Typ
+            <select id="vaultType">
+              <option>Hook</option>
+              <option>Caption</option>
+              <option>CTA</option>
+              <option>Hashtag-Set</option>
+            </select>
+          </label>
+          <label>
+            Titel
+            <input id="vaultTitle" autocomplete="off" maxlength="90" required placeholder="Vorlagenname">
+          </label>
+          <label>
+            Vorlage
+            <textarea id="vaultText" maxlength="900" required placeholder="Text, CTA oder Hashtags"></textarea>
+          </label>
+          <button class="primary" type="submit">Vorlage speichern</button>
+        </form>
+        <div>
+          <div class="filters" id="vaultFilters"></div>
+          <div class="list" id="vaultList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="analytics" class="view">
+      <div class="content-grid">
+        <form class="panel form" id="statsForm">
+          <h2>Reel-Statistik</h2>
+          <label>
+            Titel
+            <input id="statsTitle" autocomplete="off" maxlength="90" required placeholder="Veröffentlichtes Reel">
+          </label>
+          <div class="row">
+            <label>
+              Datum
+              <input id="statsDate" type="date" required>
+            </label>
+            <label>
+              Kategorie
+              <select id="statsCategory">
+                <option>Fitness</option>
+                <option>Food</option>
+                <option>Behind the Scenes</option>
+                <option>Education</option>
+                <option>Personal</option>
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Hook
+              <input id="statsHook" autocomplete="off" maxlength="120" placeholder="Erste 2 Sekunden">
+            </label>
+            <label>
+              Song
+              <input id="statsSong" autocomplete="off" maxlength="90" placeholder="Audio / Trend">
+            </label>
+          </div>
+          <label>
+            Hook-Typ
+            <select id="statsHookType">
+              <option>Fehler</option>
+              <option>Tutorial</option>
+              <option>Motivation</option>
+              <option>Transformation</option>
+              <option>Provokation</option>
+              <option>Sonstiges</option>
+            </select>
+          </label>
+          <div class="row">
+            <label>
+              Views
+              <input id="statsViews" type="number" min="0" inputmode="numeric" value="0">
+            </label>
+            <label>
+              Likes
+              <input id="statsLikes" type="number" min="0" inputmode="numeric" value="0">
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Kommentare
+              <input id="statsComments" type="number" min="0" inputmode="numeric" value="0">
+            </label>
+            <label>
+              Saves
+              <input id="statsSaves" type="number" min="0" inputmode="numeric" value="0">
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Shares
+              <input id="statsShares" type="number" min="0" inputmode="numeric" value="0">
+            </label>
+            <label>
+              Followergewinn
+              <input id="statsFollowers" type="number" min="0" inputmode="numeric" value="0">
+            </label>
+          </div>
+          <label>
+            Warum lief es gut/schlecht?
+            <textarea id="statsNote" maxlength="700" placeholder="Hook, Thema, Timing, Schnitt, CTA"></textarea>
+          </label>
+          <label>
+            Screenshot
+            <input id="statsScreenshot" type="file" accept="image/*">
+          </label>
+          <img class="preview" id="screenshotPreview" alt="Screenshot-Vorschau">
+          <p class="notice" id="screenshotHint">Automatisches Auslesen kommt später per OCR/AI.</p>
+          <button class="secondary" id="readScreenshot" type="button">Daten aus Screenshot auslesen</button>
+          <button class="primary" type="submit">Statistik speichern</button>
+        </form>
+
+        <div>
+          <div class="list" id="statsList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "social-media-app-v0_6";
+    const LEGACY_STORAGE_KEY = "social-media-app-v0_5";
+    const SCREENSHOT_MAX_BYTES = 750 * 1024;
+    const statuses = ["Idee", "Skript", "Gefilmt", "Geschnitten", "Geplant", "Hochgeladen"];
+    const categories = ["Alle", "Push", "Pull", "Legs", "Oberkörper", "Arme", "Lifestyle", "Motivation", "Fitness", "Food", "Behind the Scenes", "Education", "Personal"];
+    const hookTypes = ["Fehler", "Tutorial", "Motivation", "Transformation", "Provokation", "Sonstiges"];
+    const vaultTypes = ["Alle", "Hook", "Caption", "CTA", "Hashtag-Set"];
+    let activeCategory = "Alle";
+    let activeStatus = "Alle";
+    let activeVaultType = "Alle";
+    let state = loadState();
+    let items = state.items;
+    let reelStats = state.reelStats;
+    let vault = state.vault;
+    let generatedIdeas = [];
+    let editingVaultId = null;
+    let todayRecommendation = null;
+    let pendingScreenshot = null;
+
+    const els = {
+      tabs: document.querySelectorAll(".tab"),
+      views: document.querySelectorAll(".view"),
+      form: document.getElementById("ideaForm"),
+      statsForm: document.getElementById("statsForm"),
+      generatorForm: document.getElementById("generatorForm"),
+      vaultForm: document.getElementById("vaultForm"),
+      todayCoachButton: document.getElementById("todayCoachButton"),
+      todayRecommendation: document.getElementById("todayRecommendation"),
+      title: document.getElementById("title"),
+      notes: document.getElementById("notes"),
+      ideaHookTemplate: document.getElementById("ideaHookTemplate"),
+      ideaCaptionTemplate: document.getElementById("ideaCaptionTemplate"),
+      ideaCtaTemplate: document.getElementById("ideaCtaTemplate"),
+      ideaHashtagTemplate: document.getElementById("ideaHashtagTemplate"),
+      category: document.getElementById("category"),
+      status: document.getElementById("status"),
+      date: document.getElementById("date"),
+      generatorCategory: document.getElementById("generatorCategory"),
+      generatorHookType: document.getElementById("generatorHookType"),
+      generatorList: document.getElementById("generatorList"),
+      vaultType: document.getElementById("vaultType"),
+      vaultTitle: document.getElementById("vaultTitle"),
+      vaultText: document.getElementById("vaultText"),
+      vaultFilters: document.getElementById("vaultFilters"),
+      vaultList: document.getElementById("vaultList"),
+      statsTitle: document.getElementById("statsTitle"),
+      statsDate: document.getElementById("statsDate"),
+      statsCategory: document.getElementById("statsCategory"),
+      statsHook: document.getElementById("statsHook"),
+      statsSong: document.getElementById("statsSong"),
+      statsHookType: document.getElementById("statsHookType"),
+      statsViews: document.getElementById("statsViews"),
+      statsLikes: document.getElementById("statsLikes"),
+      statsComments: document.getElementById("statsComments"),
+      statsSaves: document.getElementById("statsSaves"),
+      statsShares: document.getElementById("statsShares"),
+      statsFollowers: document.getElementById("statsFollowers"),
+      statsNote: document.getElementById("statsNote"),
+      statsScreenshot: document.getElementById("statsScreenshot"),
+      screenshotPreview: document.getElementById("screenshotPreview"),
+      screenshotHint: document.getElementById("screenshotHint"),
+      readScreenshot: document.getElementById("readScreenshot"),
+      stats: document.getElementById("stats"),
+      pipelineStats: document.getElementById("pipelineStats"),
+      coachList: document.getElementById("coachList"),
+      topReels: document.getElementById("topReels"),
+      categoryAnalysis: document.getElementById("categoryAnalysis"),
+      hookAnalysis: document.getElementById("hookAnalysis"),
+      filters: document.getElementById("filters"),
+      statusFilters: document.getElementById("statusFilters"),
+      ideaList: document.getElementById("ideaList"),
+      plannerList: document.getElementById("plannerList"),
+      nextReels: document.getElementById("nextReels"),
+      statsList: document.getElementById("statsList")
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          return normalizeState(JSON.parse(raw));
+        }
+        const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (legacyRaw) {
+          return normalizeState(JSON.parse(legacyRaw));
+        }
+        return { items: seedItems(), reelStats: seedReelStats(), vault: seedVault() };
+      } catch (error) {
+        return { items: seedItems(), reelStats: seedReelStats(), vault: seedVault() };
+      }
+    }
+
+    function normalizeState(value) {
+      if (Array.isArray(value)) {
+        return { items: value.map(normalizeItem), reelStats: [], vault: seedVault() };
+      }
+      return {
+        items: Array.isArray(value.items) ? value.items.map(normalizeItem) : seedItems(),
+        reelStats: Array.isArray(value.reelStats) ? value.reelStats.map(normalizeStats) : [],
+        vault: Array.isArray(value.vault) ? value.vault.map(normalizeVaultItem) : seedVault()
+      };
+    }
+
+    function normalizeItem(item) {
+      return {
+        id: item.id || crypto.randomUUID(),
+        title: item.title || "Unbenannte Idee",
+        notes: item.notes || "",
+        hook: item.hook || "",
+        caption: item.caption || "",
+        cta: item.cta || "",
+        hashtags: item.hashtags || "",
+        category: item.category || "Fitness",
+        status: statuses.includes(item.status) ? item.status : "Idee",
+        date: item.date || "",
+        createdAt: item.createdAt || Date.now()
+      };
+    }
+
+    function seedItems() {
+      return [
+        {
+          id: crypto.randomUUID(),
+          title: "3 Fehler beim Meal Prep",
+          notes: "Kurzer Hook, drei schnelle Beispiele, am Ende Speicher-CTA.",
+          category: "Food",
+          status: "Idee",
+          date: todayPlus(1),
+          createdAt: Date.now()
+        },
+        {
+          id: crypto.randomUUID(),
+          title: "Gym Tasche packen als Reel",
+          notes: "Schnelle Schnitte, jedes Item als Beat.",
+          category: "Fitness",
+          status: "Gefilmt",
+          date: todayPlus(3),
+          createdAt: Date.now() - 2000
+        }
+      ];
+    }
+
+    function seedReelStats() {
+      return [
+        {
+          id: crypto.randomUUID(),
+          title: "Protein-Fruehstueck in 30 Sekunden",
+          date: todayPlus(-2),
+          category: "Food",
+          hook: "Das esse ich, wenn ich keine Zeit habe.",
+          hookType: "Tutorial",
+          song: "Clean beat",
+          views: 12800,
+          likes: 820,
+          comments: 34,
+          saves: 176,
+          shares: 58,
+          followers: 42,
+          note: "Klare Hook, schneller Schnitt und direkt nutzbarer Mehrwert.",
+          createdAt: Date.now() - 5000,
+          screenshotData: "",
+          screenshotName: ""
+        }
+      ];
+    }
+
+    function seedVault() {
+      return [
+        { id: crypto.randomUUID(), type: "Hook", title: "Fehler Hook", text: "Du machst diesen Fehler bei deiner ersten schweren Übung.", createdAt: Date.now() },
+        { id: crypto.randomUUID(), type: "Caption", title: "Training kurz", text: "Kurz, schwer, sauber. Heute zählt nur die nächste gute Wiederholung.", createdAt: Date.now() },
+        { id: crypto.randomUUID(), type: "CTA", title: "Speichern", text: "Speicher dir das für dein nächstes Training.", createdAt: Date.now() },
+        { id: crypto.randomUUID(), type: "Hashtag-Set", title: "Bodybuilding", text: "#bodybuilding #gymdeutschland #hypertrophy #training", createdAt: Date.now() }
+      ];
+    }
+
+    function normalizeVaultItem(item) {
+      const type = vaultTypes.includes(item.type) && item.type !== "Alle" ? item.type : "Hook";
+      return {
+        id: item.id || crypto.randomUUID(),
+        type,
+        title: item.title || `${type} Vorlage`,
+        text: item.text || "",
+        createdAt: item.createdAt || Date.now()
+      };
+    }
+
+    function statsFromItem(item) {
+      return {
+        id: crypto.randomUUID(),
+        title: item.title,
+        date: item.date || "",
+        category: item.category || "Fitness",
+        hook: item.notes || "",
+        hookType: "Sonstiges",
+        song: "",
+        views: 0,
+        likes: 0,
+        comments: 0,
+        saves: 0,
+        shares: 0,
+        followers: 0,
+        note: "Aus v0.2 uebernommen. Performance-Werte bitte nachtragen.",
+        createdAt: Date.now(),
+        screenshotData: "",
+        screenshotName: ""
+      };
+    }
+
+    function normalizeStats(stat) {
+      return {
+        id: stat.id || crypto.randomUUID(),
+        title: stat.title || "Unbenanntes Reel",
+        date: stat.date || "",
+        category: stat.category || "Fitness",
+        hook: stat.hook || "",
+        hookType: hookTypes.includes(stat.hookType) ? stat.hookType : "Sonstiges",
+        song: stat.song || "",
+        views: toNumber(stat.views),
+        likes: toNumber(stat.likes),
+        comments: toNumber(stat.comments),
+        saves: toNumber(stat.saves),
+        shares: toNumber(stat.shares),
+        followers: toNumber(stat.followers),
+        note: stat.note || "",
+        createdAt: stat.createdAt || Date.now(),
+        screenshotData: isSafeImageData(stat.screenshotData) ? stat.screenshotData : "",
+        screenshotName: stat.screenshotName || ""
+      };
+    }
+
+    function todayPlus(days) {
+      const date = new Date();
+      date.setDate(date.getDate() + days);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function persist() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, reelStats, vault }));
+      render();
+    }
+
+    function setView(viewName) {
+      els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.view === viewName));
+      els.views.forEach((view) => view.classList.toggle("active", view.id === viewName));
+    }
+
+    function renderChips(container, values, active, onPick) {
+      container.innerHTML = "";
+      values.forEach((value) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chip" + (value === active ? " active" : "");
+        button.textContent = value;
+        button.addEventListener("click", () => onPick(value));
+        container.appendChild(button);
+      });
+    }
+
+    function renderStats() {
+      const topReel = bestReel();
+      const savedReel = bestByMetric("saves");
+      const stats = [
+        { label: "Gesamt", value: items.length, detail: "Ideen und geplante Reels" },
+        { label: "Pipeline", value: statuses.length, detail: "Status-Stufen aktiv" },
+        { label: "Online", value: countStatus("Hochgeladen"), detail: "Hochgeladen im Planer" },
+        { label: "Gesamtviews", value: formatNumber(sumMetric("views")), detail: "Alle getrackten Reels" },
+        { label: "Beste Reel", value: topReel ? formatNumber(topReel.views) : "0", detail: topReel ? topReel.title : "Noch keine Daten" },
+        { label: "Beste Kategorie", value: bestCategory(), detail: "Nach Gesamtviews" },
+        { label: "Bester Hook-Typ", value: bestHookType(), detail: "Nach durchschnittlichen Views" },
+        { label: "Meiste Saves", value: savedReel ? formatNumber(savedReel.saves) : "0", detail: savedReel ? savedReel.title : "Noch keine Daten" },
+        { label: "Vault", value: vault.length, detail: "Hooks, Captions, CTAs, Hashtags" },
+        { label: "Hooks", value: countVaultType("Hook"), detail: "Gespeicherte Hook-Vorlagen" },
+        { label: "Ø Likes", value: averageMetric("likes"), detail: "Pro getracktem Reel" },
+        { label: "Ø Saves", value: averageMetric("saves"), detail: "Pro getracktem Reel" }
+      ];
+      els.stats.innerHTML = stats.map((stat) => `
+        <article class="stat">
+          <strong>${escapeHtml(stat.value)}</strong>
+          <span>${escapeHtml(stat.label)}</span>
+          <small>${escapeHtml(stat.detail)}</small>
+        </article>
+      `).join("");
+    }
+
+    function countStatus(status) {
+      return items.filter((item) => item.status === status).length;
+    }
+
+    function countVaultType(type) {
+      return vault.filter((item) => item.type === type).length;
+    }
+
+    function renderPipelineStats() {
+      els.pipelineStats.innerHTML = statuses.map((status) => `
+        <article class="stat">
+          <strong>${countStatus(status)}</strong>
+          <span>${escapeHtml(status)}</span>
+          <small>${escapeHtml(pipelineDetail(status))}</small>
+        </article>
+      `).join("");
+    }
+
+    function pipelineDetail(status) {
+      const details = {
+        Idee: "Thema sammeln",
+        Skript: "Hook und Ablauf schreiben",
+        Gefilmt: "Material ist da",
+        Geschnitten: "Edit pruefen",
+        Geplant: "Upload terminiert",
+        Hochgeladen: "Live und messbar"
+      };
+      return details[status] || "";
+    }
+
+    function sumMetric(metric) {
+      return reelStats.reduce((sum, stat) => sum + toNumber(stat[metric]), 0);
+    }
+
+    function averageMetric(metric) {
+      if (!reelStats.length) return "0";
+      return Math.round(sumMetric(metric) / reelStats.length).toString();
+    }
+
+    function bestReel() {
+      return [...reelStats].sort((a, b) => b.views - a.views)[0];
+    }
+
+    function bestByMetric(metric) {
+      return [...reelStats].sort((a, b) => toNumber(b[metric]) - toNumber(a[metric]))[0];
+    }
+
+    function topByMetric(metric) {
+      return [...reelStats]
+        .sort((a, b) => toNumber(b[metric]) - toNumber(a[metric]))
+        .slice(0, 5);
+    }
+
+    function averageGroups(groupKey) {
+      const groups = reelStats.reduce((map, stat) => {
+        const key = stat[groupKey] || "Sonstiges";
+        if (!map[key]) {
+          map[key] = { label: key, count: 0, views: 0, likes: 0, saves: 0 };
+        }
+        map[key].count += 1;
+        map[key].views += toNumber(stat.views);
+        map[key].likes += toNumber(stat.likes);
+        map[key].saves += toNumber(stat.saves);
+        return map;
+      }, {});
+      return Object.values(groups)
+        .map((group) => ({
+          label: group.label,
+          count: group.count,
+          views: Math.round(group.views / group.count),
+          likes: Math.round(group.likes / group.count),
+          saves: Math.round(group.saves / group.count)
+        }))
+        .sort((a, b) => b.views - a.views);
+    }
+
+    function bestCategory() {
+      return averageGroups("category")[0]?.label || "-";
+    }
+
+    function bestHookType() {
+      return averageGroups("hookType")[0]?.label || "-";
+    }
+
+    function renderAnalysisRow(title, value, detail, isBest = false) {
+      return `
+        <article class="analysis-row${isBest ? " best" : ""}">
+          <div>
+            <strong>${escapeHtml(title)}</strong>
+            <span>${escapeHtml(detail)}</span>
+          </div>
+          <strong>${escapeHtml(value)}</strong>
+        </article>
+      `;
+    }
+
+    function renderTopReels() {
+      const blocks = [
+        ["Top 5 Views", "views"],
+        ["Top 5 Saves", "saves"],
+        ["Top 5 Likes", "likes"]
+      ];
+      els.topReels.innerHTML = blocks.map(([title, metric]) => {
+        const rows = topByMetric(metric).map((stat, index) =>
+          renderAnalysisRow(`${index + 1}. ${stat.title}`, formatNumber(stat[metric]), `${stat.category} | ${stat.hookType}`)
+        ).join("");
+        return renderAnalysisRow(title, "", "Automatisch aus gespeicherten Reel-Stats") + (rows || renderAnalysisRow("Keine Daten", "0", metric));
+      }).join("");
+    }
+
+    function renderCategoryAnalysis() {
+      const groups = averageGroups("category");
+      els.categoryAnalysis.innerHTML = groups.length
+        ? groups.map((group, index) => renderAnalysisRow(
+            group.label,
+            `${formatNumber(group.views)} Views`,
+            `Ø Likes ${formatNumber(group.likes)} | Ø Saves ${formatNumber(group.saves)} | ${group.count} Reels`,
+            index === 0
+          )).join("")
+        : renderAnalysisRow("Keine Kategorie-Daten", "0", "Noch keine Reel-Statistiken gespeichert");
+    }
+
+    function renderHookAnalysis() {
+      const groups = averageGroups("hookType");
+      els.hookAnalysis.innerHTML = groups.length
+        ? groups.map((group, index) => renderAnalysisRow(
+            group.label,
+            `${formatNumber(group.views)} Views`,
+            `Ø Likes ${formatNumber(group.likes)} | Ø Saves ${formatNumber(group.saves)} | ${group.count} Reels`,
+            index === 0
+          )).join("")
+        : renderAnalysisRow("Keine Hook-Daten", "0", "Noch keine Reel-Statistiken gespeichert");
+    }
+
+    function renderCoach() {
+      const topViews = bestByMetric("views");
+      const topSaves = bestByMetric("saves");
+      els.coachList.innerHTML = [
+        renderAnalysisRow("Beste Kategorie", bestCategory(), "Mehr davon testen"),
+        renderAnalysisRow("Bester Hook-Typ", bestHookType(), "Als naechste Hook priorisieren"),
+        renderAnalysisRow("Meiste Saves", topSaves ? topSaves.title : "-", topSaves ? `${formatNumber(topSaves.saves)} Saves` : "Noch keine Daten"),
+        renderAnalysisRow("Meiste Views", topViews ? topViews.title : "-", topViews ? `${formatNumber(topViews.views)} Views` : "Noch keine Daten")
+      ].join("");
+    }
+
+    function itemCard(item) {
+      const article = document.createElement("article");
+      article.className = "idea";
+      article.innerHTML = `
+        <div class="idea-head">
+          <h3>${escapeHtml(item.title)}</h3>
+          <span class="badge status">${escapeHtml(item.status)}</span>
+        </div>
+        <div class="meta">
+          <span class="badge">${escapeHtml(item.category)}</span>
+          <span class="badge">${item.date ? formatDate(item.date) : "Ohne Datum"}</span>
+        </div>
+        <p class="notes">${escapeHtml(item.notes || "Keine Notizen")}</p>
+        ${item.hook ? `<p class="notes">Hook: ${escapeHtml(item.hook)}</p>` : ""}
+        ${item.caption ? `<p class="notes">Caption: ${escapeHtml(item.caption)}</p>` : ""}
+        ${item.cta ? `<p class="notes">CTA: ${escapeHtml(item.cta)}</p>` : ""}
+        ${item.hashtags ? `<p class="notes">Hashtags: ${escapeHtml(item.hashtags)}</p>` : ""}
+        <div class="actions">
+          <button class="secondary" type="button" data-action="next">Weiter</button>
+          <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
+        </div>
+      `;
+      article.querySelector('[data-action="next"]').addEventListener("click", () => advanceStatus(item.id));
+      article.querySelector('[data-action="delete"]').addEventListener("click", () => deleteItem(item.id));
+      return article;
+    }
+
+    function statsCard(stat) {
+      const article = document.createElement("article");
+      article.className = "idea";
+      article.innerHTML = `
+        <div class="idea-head">
+          <h3>${escapeHtml(stat.title)}</h3>
+          <span class="badge status">${formatNumber(stat.views)} Views</span>
+        </div>
+        <div class="meta">
+          <span class="badge">${escapeHtml(stat.category)}</span>
+          <span class="badge">${escapeHtml(stat.hookType || "Sonstiges")}</span>
+          <span class="badge">${stat.date ? formatDate(stat.date) : "Ohne Datum"}</span>
+          <span class="badge">${escapeHtml(stat.song || "Kein Song")}</span>
+        </div>
+        ${stat.screenshotData ? `<img class="screenshot" src="${escapeHtml(stat.screenshotData)}" alt="Gespeicherter Reel-Screenshot">` : ""}
+        <p class="notes">${escapeHtml(stat.hook || "Keine Hook notiert")}</p>
+        <div class="metric-grid">
+          <div class="metric"><strong>${formatNumber(stat.likes)}</strong><span>Likes</span></div>
+          <div class="metric"><strong>${formatNumber(stat.comments)}</strong><span>Kommentare</span></div>
+          <div class="metric"><strong>${formatNumber(stat.saves)}</strong><span>Saves</span></div>
+          <div class="metric"><strong>${formatNumber(stat.shares)}</strong><span>Shares</span></div>
+          <div class="metric"><strong>${formatNumber(stat.followers)}</strong><span>Follower</span></div>
+        </div>
+        <p class="notes">${escapeHtml(stat.note || "Keine Auswertung notiert")}</p>
+        <p class="notice">Automatisches Auslesen kommt später per OCR/AI.</p>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="readStats">Daten aus Screenshot auslesen</button>
+          <button class="secondary danger" type="button" data-action="deleteStats">Loeschen</button>
+        </div>
+      `;
+      article.querySelector('[data-action="readStats"]').addEventListener("click", showOcrNotice);
+      article.querySelector('[data-action="deleteStats"]').addEventListener("click", () => deleteStats(stat.id));
+      return article;
+    }
+
+    function renderList(container, source, emptyText) {
+      container.innerHTML = "";
+      if (!source.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = emptyText;
+        container.appendChild(empty);
+        return;
+      }
+      source.forEach((item) => container.appendChild(itemCard(item)));
+    }
+
+    function renderStatsList() {
+      els.statsList.innerHTML = "";
+      const sorted = sortedByDate(reelStats).reverse();
+      if (!sorted.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Noch keine Reel-Statistik gespeichert.";
+        els.statsList.appendChild(empty);
+        return;
+      }
+      sorted.forEach((stat) => els.statsList.appendChild(statsCard(stat)));
+    }
+
+    function generatorTemplates(category, hookType) {
+      const categoryAngles = {
+        Push: ["Bankdrücken", "Schulterdrücken", "Dips", "Brustpumpe", "Trizeps-Finisher"],
+        Pull: ["Klimmzüge", "Rudern", "Latziehen", "Rear Delts", "Bizeps-Finisher"],
+        Legs: ["Kniebeugen", "Beinpresse", "RDLs", "Leg Curl", "Waden"],
+        Oberkörper: ["Upper Day", "Supersatz", "Schulterbreite", "Rückenbreite", "Arme am Ende"],
+        Arme: ["Bizeps", "Trizeps", "Pump Satz", "Cable Curl", "Overhead Extension"],
+        Lifestyle: ["Meal Prep", "Gym Bag", "Routine", "Regeneration", "Alltag"],
+        Motivation: ["Disziplin", "Plateau", "Comeback", "Mindset", "Progress"]
+      };
+      const hookAngles = {
+        Fehler: ["vermeiden musst", "wahrscheinlich falsch machst"],
+        Tutorial: ["sauber ausführst", "in 3 Schritten lernst"],
+        Motivation: ["auch an schlechten Tagen durchziehst", "wieder ernst nimmst"],
+        Transformation: ["messbar besser machst", "von schwach zu stabil bringst"],
+        Provokation: ["nicht hören willst", "dir niemand im Gym sagt"],
+        Sonstiges: ["heute testen kannst", "schnell verbessern kannst"]
+      };
+      const moves = categoryAngles[category] || categoryAngles.Push;
+      const hooks = hookAngles[hookType] || hookAngles.Sonstiges;
+      return Array.from({ length: 10 }, (_, index) => {
+        const move = moves[index % moves.length];
+        const hook = hooks[index % hooks.length];
+        return {
+          id: crypto.randomUUID(),
+          title: `${category}: ${move} - ${hook}`,
+          notes: `Hook-Typ: ${hookType}\nAufbau: Hook, kurzer Kontext, 2-3 klare Punkte, CTA.`,
+          category,
+          status: "Idee",
+          hookType
+        };
+      });
+    }
+
+    function renderGeneratorIdeas() {
+      els.generatorList.innerHTML = "";
+      if (!generatedIdeas.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Waehle Kategorie und Hook-Typ, dann generiere lokale Reel-Ideen.";
+        els.generatorList.appendChild(empty);
+        return;
+      }
+      generatedIdeas.forEach((idea) => {
+        const article = document.createElement("article");
+        article.className = "idea";
+        article.innerHTML = `
+          <div class="idea-head">
+            <h3>${escapeHtml(idea.title)}</h3>
+            <span class="badge status">${escapeHtml(idea.hookType)}</span>
+          </div>
+          <div class="meta">
+            <span class="badge">${escapeHtml(idea.category)}</span>
+            <span class="badge">Lokale Vorlage</span>
+          </div>
+          <p class="notes">${escapeHtml(idea.notes)}</p>
+          <div class="actions">
+            <button class="secondary" type="button" data-action="saveIdea">Als Idee speichern</button>
+            <button class="secondary" type="button" data-action="pipeline">In Pipeline</button>
+          </div>
+        `;
+        article.querySelector('[data-action="saveIdea"]').addEventListener("click", () => saveGeneratedIdea(idea, "Idee"));
+        article.querySelector('[data-action="pipeline"]').addEventListener("click", () => saveGeneratedIdea(idea, "Skript"));
+        els.generatorList.appendChild(article);
+      });
+    }
+
+    function saveGeneratedIdea(idea, status) {
+      items = [{
+        id: crypto.randomUUID(),
+        title: idea.title,
+        notes: idea.notes,
+        hook: idea.title,
+        caption: "",
+        cta: "",
+        hashtags: "",
+        category: idea.category,
+        status,
+        date: "",
+        createdAt: Date.now()
+      }, ...items];
+      persist();
+    }
+
+    function renderVaultSelectors() {
+      setTemplateSelect(els.ideaHookTemplate, "Hook");
+      setTemplateSelect(els.ideaCaptionTemplate, "Caption");
+      setTemplateSelect(els.ideaCtaTemplate, "CTA");
+      setTemplateSelect(els.ideaHashtagTemplate, "Hashtag-Set");
+    }
+
+    function setTemplateSelect(select, type) {
+      select.innerHTML = `<option value="">Keine Vorlage</option>` + vault
+        .filter((item) => item.type === type)
+        .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.title)}</option>`)
+        .join("");
+    }
+
+    function selectedVaultText(id) {
+      return vault.find((item) => item.id === id)?.text || "";
+    }
+
+    function vaultCard(item) {
+      const article = document.createElement("article");
+      article.className = "idea";
+      article.innerHTML = `
+        <div class="idea-head">
+          <h3>${escapeHtml(item.title)}</h3>
+          <span class="badge status">${escapeHtml(item.type)}</span>
+        </div>
+        <p class="notes">${escapeHtml(item.text)}</p>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="use">Uebernehmen</button>
+          <button class="secondary" type="button" data-action="copy">Kopieren</button>
+          <button class="secondary" type="button" data-action="edit">Bearbeiten</button>
+          <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
+        </div>
+      `;
+      article.querySelector('[data-action="use"]').addEventListener("click", () => applyVaultItem(item));
+      article.querySelector('[data-action="copy"]').addEventListener("click", () => copyVaultText(item.text));
+      article.querySelector('[data-action="edit"]').addEventListener("click", () => editVaultItem(item));
+      article.querySelector('[data-action="delete"]').addEventListener("click", () => deleteVaultItem(item.id));
+      return article;
+    }
+
+    function renderVaultList() {
+      els.vaultList.innerHTML = "";
+      const filtered = activeVaultType === "Alle" ? vault : vault.filter((item) => item.type === activeVaultType);
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Noch keine Vorlage fuer diesen Typ.";
+        els.vaultList.appendChild(empty);
+        return;
+      }
+      filtered.forEach((item) => els.vaultList.appendChild(vaultCard(item)));
+    }
+
+    function applyVaultItem(item) {
+      if (item.type === "Hook") els.title.value = item.text;
+      if (item.type === "Caption") els.notes.value = [els.notes.value, `Caption: ${item.text}`].filter(Boolean).join("\n");
+      if (item.type === "CTA") els.notes.value = [els.notes.value, `CTA: ${item.text}`].filter(Boolean).join("\n");
+      if (item.type === "Hashtag-Set") els.notes.value = [els.notes.value, `Hashtags: ${item.text}`].filter(Boolean).join("\n");
+      setView("ideas");
+    }
+
+    function copyVaultText(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+    }
+
+    function editVaultItem(item) {
+      editingVaultId = item.id;
+      els.vaultType.value = item.type;
+      els.vaultTitle.value = item.title;
+      els.vaultText.value = item.text;
+    }
+
+    function deleteVaultItem(id) {
+      vault = vault.filter((item) => item.id !== id);
+      if (editingVaultId === id) editingVaultId = null;
+      persist();
+    }
+
+    function lastPostedCategory() {
+      return [...reelStats]
+        .filter((stat) => stat.date)
+        .sort((a, b) => b.date.localeCompare(a.date))[0]?.category || "";
+    }
+
+    function recommendedCategory() {
+      const preferred = bestCategory();
+      const fallback = "Push";
+      const last = lastPostedCategory();
+      const alternatives = averageGroups("category").map((group) => group.label).filter((label) => label !== last);
+      if (preferred && preferred !== "-" && preferred !== last) return preferred;
+      return alternatives[0] || preferred || fallback;
+    }
+
+    function recommendedHookType() {
+      const preferred = bestHookType();
+      return preferred && preferred !== "-" ? preferred : "Tutorial";
+    }
+
+    function pickPipelineIdea(category) {
+      const priorities = [["Geschnitten", "Geplant"], ["Gefilmt"], ["Skript"]];
+      for (const group of priorities) {
+        const candidates = items.filter((item) => group.includes(item.status));
+        const alternate = candidates.find((item) => item.category !== lastPostedCategory());
+        const matching = candidates.find((item) => item.category === category);
+        if (matching) return matching;
+        if (alternate) return alternate;
+        if (candidates[0]) return candidates[0];
+      }
+      return null;
+    }
+
+    function vaultTextByType(type) {
+      return vault.find((item) => item.type === type)?.text || "";
+    }
+
+    function buildTodayRecommendation() {
+      const category = recommendedCategory();
+      const hookType = recommendedHookType();
+      const pipelineIdea = pickPipelineIdea(category);
+      const generated = generatorTemplates(category, hookType)[0];
+      const source = pipelineIdea || generated;
+      const hook = vaultTextByType("Hook") || source.hook || source.title;
+      const cta = vaultTextByType("CTA") || "Speicher dir das fuer dein naechstes Training.";
+      const hashtags = vaultTextByType("Hashtag-Set") || "#bodybuilding #training #gym";
+      const reasonParts = [
+        reelStats.length ? "Kategorie und Hook-Typ basieren auf deinen bisherigen Reel-Statistiken." : "Es gibt noch keine Statistikdaten, daher nutzt die App lokale Standardempfehlungen.",
+        pipelineIdea ? `Pipeline bevorzugt Status ${pipelineIdea.status}.` : "Keine passende offene Pipeline gefunden, daher lokale Generator-Idee.",
+        lastPostedCategory() && category !== lastPostedCategory() ? "Die zuletzt gepostete Kategorie wurde nach Möglichkeit vermieden." : "Keine bessere Kategorie-Alternative gefunden."
+      ];
+      return {
+        category,
+        hookType,
+        title: source.title,
+        notes: source.notes || "Lokale Empfehlung fuer den heutigen Post.",
+        hook,
+        cta,
+        hashtags,
+        sourceStatus: pipelineIdea ? pipelineIdea.status : "Neue Idee",
+        reason: reasonParts.join(" ")
+      };
+    }
+
+    function renderTodayRecommendation() {
+      els.todayRecommendation.innerHTML = "";
+      if (!todayRecommendation) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Noch keine Empfehlung generiert.";
+        els.todayRecommendation.appendChild(empty);
+        return;
+      }
+      const article = document.createElement("article");
+      article.className = "idea";
+      article.innerHTML = `
+        <div class="idea-head">
+          <h3>${escapeHtml(todayRecommendation.title)}</h3>
+          <span class="badge status">${escapeHtml(todayRecommendation.sourceStatus)}</span>
+        </div>
+        <div class="meta">
+          <span class="badge">${escapeHtml(todayRecommendation.category)}</span>
+          <span class="badge">${escapeHtml(todayRecommendation.hookType)}</span>
+        </div>
+        <p class="notes">Hook: ${escapeHtml(todayRecommendation.hook)}</p>
+        <p class="notes">CTA: ${escapeHtml(todayRecommendation.cta)}</p>
+        <p class="notes">Hashtags: ${escapeHtml(todayRecommendation.hashtags)}</p>
+        <p class="notes">${escapeHtml(todayRecommendation.reason)}</p>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="saveToday">Empfehlung als Idee speichern</button>
+          <button class="secondary" type="button" data-action="pipelineToday">Empfehlung in Pipeline übernehmen</button>
+        </div>
+      `;
+      article.querySelector('[data-action="saveToday"]').addEventListener("click", () => saveTodayRecommendation("Idee"));
+      article.querySelector('[data-action="pipelineToday"]').addEventListener("click", () => saveTodayRecommendation("Skript"));
+      els.todayRecommendation.appendChild(article);
+    }
+
+    function saveTodayRecommendation(status) {
+      if (!todayRecommendation) return;
+      items = [{
+        id: crypto.randomUUID(),
+        title: todayRecommendation.title,
+        notes: `${todayRecommendation.notes}\n${todayRecommendation.reason}`,
+        hook: todayRecommendation.hook,
+        caption: "",
+        cta: todayRecommendation.cta,
+        hashtags: todayRecommendation.hashtags,
+        category: todayRecommendation.category,
+        status,
+        date: "",
+        createdAt: Date.now()
+      }, ...items];
+      persist();
+    }
+
+    function renderIdeas() {
+      const filtered = activeCategory === "Alle"
+        ? items
+        : items.filter((item) => item.category === activeCategory);
+      renderList(els.ideaList, filtered, "Noch keine Idee in dieser Kategorie.");
+    }
+
+    function renderPlanner() {
+      const filtered = activeStatus === "Alle"
+        ? sortedByDate(items)
+        : sortedByDate(items.filter((item) => item.status === activeStatus));
+      renderList(els.plannerList, filtered, "Keine Reels fuer diesen Status.");
+    }
+
+    function renderNextReels() {
+      const next = sortedByDate(items)
+        .filter((item) => item.status !== "Hochgeladen")
+        .slice(0, 3);
+      renderList(els.nextReels, next, "Noch nichts geplant.");
+    }
+
+    function sortedByDate(source) {
+      return [...source].sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999"));
+    }
+
+    function advanceStatus(id) {
+      items = items.map((item) => {
+        if (item.id !== id) return item;
+        const index = statuses.indexOf(item.status);
+        return { ...item, status: statuses[Math.min(index + 1, statuses.length - 1)] };
+      });
+      persist();
+    }
+
+    function deleteItem(id) {
+      items = items.filter((item) => item.id !== id);
+      persist();
+    }
+
+    function deleteStats(id) {
+      reelStats = reelStats.filter((stat) => stat.id !== id);
+      persist();
+    }
+
+    function formatDate(value) {
+      const [year, month, day] = value.split("-");
+      return `${day}.${month}.${year}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function toNumber(value) {
+      const number = Number(value);
+      return Number.isFinite(number) && number > 0 ? Math.round(number) : 0;
+    }
+
+    function formatNumber(value) {
+      return toNumber(value).toLocaleString("de-DE");
+    }
+
+    function isSafeImageData(value) {
+      return typeof value === "string" && /^data:image\/(png|jpeg|jpg|webp);base64,/.test(value);
+    }
+
+    function showOcrNotice() {
+      els.screenshotHint.textContent = "Automatisches Auslesen kommt später per OCR/AI. Aktuell werden keine Daten erkannt oder geraten.";
+      setView("analytics");
+    }
+
+    function handleScreenshotUpload(file) {
+      pendingScreenshot = null;
+      els.screenshotPreview.removeAttribute("src");
+      els.screenshotPreview.classList.remove("active");
+      if (!file) {
+        els.screenshotHint.textContent = "Automatisches Auslesen kommt später per OCR/AI.";
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        els.screenshotHint.textContent = "Bitte eine Bilddatei auswaehlen. Automatisches Auslesen kommt später per OCR/AI.";
+        els.statsScreenshot.value = "";
+        return;
+      }
+      if (file.size > SCREENSHOT_MAX_BYTES) {
+        els.screenshotHint.textContent = "Screenshot ist zu gross fuer localStorage. Bitte kleineres Bild nutzen. Automatisches Auslesen kommt später per OCR/AI.";
+        els.statsScreenshot.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        const dataUrl = String(reader.result || "");
+        if (!isSafeImageData(dataUrl)) {
+          els.screenshotHint.textContent = "Bildformat konnte nicht lokal gespeichert werden. Automatisches Auslesen kommt später per OCR/AI.";
+          return;
+        }
+        pendingScreenshot = {
+          data: dataUrl,
+          name: file.name
+        };
+        els.screenshotPreview.src = dataUrl;
+        els.screenshotPreview.classList.add("active");
+        els.screenshotHint.textContent = "Screenshot wird lokal als Base64 gespeichert. Automatisches Auslesen kommt später per OCR/AI.";
+      });
+      reader.readAsDataURL(file);
+    }
+
+    function resetScreenshotInput() {
+      pendingScreenshot = null;
+      els.statsScreenshot.value = "";
+      els.screenshotPreview.removeAttribute("src");
+      els.screenshotPreview.classList.remove("active");
+      els.screenshotHint.textContent = "Automatisches Auslesen kommt später per OCR/AI.";
+    }
+
+    function render() {
+      renderChips(els.filters, categories, activeCategory, (value) => {
+        activeCategory = value;
+        render();
+      });
+      renderChips(els.statusFilters, ["Alle", ...statuses], activeStatus, (value) => {
+        activeStatus = value;
+        render();
+      });
+      renderChips(els.vaultFilters, vaultTypes, activeVaultType, (value) => {
+        activeVaultType = value;
+        render();
+      });
+      renderTodayRecommendation();
+      renderStats();
+      renderPipelineStats();
+      renderCoach();
+      renderTopReels();
+      renderCategoryAnalysis();
+      renderHookAnalysis();
+      renderIdeas();
+      renderPlanner();
+      renderNextReels();
+      renderStatsList();
+      renderGeneratorIdeas();
+      renderVaultSelectors();
+      renderVaultList();
+    }
+
+    els.tabs.forEach((tab) => {
+      tab.addEventListener("click", () => setView(tab.dataset.view));
+    });
+
+    els.todayCoachButton.addEventListener("click", () => {
+      todayRecommendation = buildTodayRecommendation();
+      renderTodayRecommendation();
+    });
+
+    els.form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      items = [
+        {
+          id: crypto.randomUUID(),
+          title: els.title.value.trim(),
+          notes: els.notes.value.trim(),
+          hook: selectedVaultText(els.ideaHookTemplate.value),
+          caption: selectedVaultText(els.ideaCaptionTemplate.value),
+          cta: selectedVaultText(els.ideaCtaTemplate.value),
+          hashtags: selectedVaultText(els.ideaHashtagTemplate.value),
+          category: els.category.value,
+          status: els.status.value,
+          date: els.date.value,
+          createdAt: Date.now()
+        },
+        ...items
+      ];
+      els.form.reset();
+      persist();
+    });
+
+    els.generatorForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      generatedIdeas = generatorTemplates(els.generatorCategory.value, els.generatorHookType.value);
+      renderGeneratorIdeas();
+    });
+
+    els.vaultForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const entry = {
+        id: editingVaultId || crypto.randomUUID(),
+        type: els.vaultType.value,
+        title: els.vaultTitle.value.trim(),
+        text: els.vaultText.value.trim(),
+        createdAt: Date.now()
+      };
+      vault = editingVaultId
+        ? vault.map((item) => item.id === editingVaultId ? entry : item)
+        : [entry, ...vault];
+      editingVaultId = null;
+      els.vaultForm.reset();
+      persist();
+    });
+
+    els.statsScreenshot.addEventListener("change", () => {
+      handleScreenshotUpload(els.statsScreenshot.files[0]);
+    });
+
+    els.readScreenshot.addEventListener("click", showOcrNotice);
+
+    els.statsForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      reelStats = [
+        {
+          id: crypto.randomUUID(),
+          title: els.statsTitle.value.trim(),
+          date: els.statsDate.value,
+          category: els.statsCategory.value,
+          hook: els.statsHook.value.trim(),
+          hookType: els.statsHookType.value,
+          song: els.statsSong.value.trim(),
+          views: toNumber(els.statsViews.value),
+          likes: toNumber(els.statsLikes.value),
+          comments: toNumber(els.statsComments.value),
+          saves: toNumber(els.statsSaves.value),
+          shares: toNumber(els.statsShares.value),
+          followers: toNumber(els.statsFollowers.value),
+          note: els.statsNote.value.trim(),
+          screenshotData: pendingScreenshot ? pendingScreenshot.data : "",
+          screenshotName: pendingScreenshot ? pendingScreenshot.name : "",
+          createdAt: Date.now()
+        },
+        ...reelStats
+      ];
+      els.statsForm.reset();
+      resetScreenshotInput();
+      persist();
+    });
+
+    persist();
+  </script>
+</body>
+</html>
