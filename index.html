@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Social Media App v0.6 Test</title>
+  <title>Social Media App v0.8 Test</title>
   <style>
     :root {
       color-scheme: dark;
@@ -51,7 +51,7 @@
     }
 
     .app {
-      width: min(100%, 760px);
+      width: min(100%, 1480px);
       min-height: 100svh;
       margin: 0 auto;
       padding: max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
@@ -108,7 +108,7 @@
       top: 0;
       z-index: 10;
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
       padding: 8px 0 14px;
       background: linear-gradient(180deg, rgba(15, 17, 21, 0.96), rgba(15, 17, 21, 0.72));
@@ -256,20 +256,21 @@
       font-weight: 750;
     }
 
+    .secondary.danger {
+      color: #d7a4aa;
+      background: rgba(255, 107, 122, 0.08);
+      border-color: rgba(255, 107, 122, 0.16);
+    }
+
     .danger {
       color: var(--danger);
     }
 
     .filters {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       margin: 12px 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .filters::-webkit-scrollbar {
-      display: none;
     }
 
     .chip {
@@ -296,7 +297,7 @@
     }
 
     .idea {
-      padding: 13px;
+      padding: 12px;
     }
 
     .idea-head {
@@ -448,6 +449,37 @@
       font-size: 1.05rem;
     }
 
+    details {
+      margin-top: 10px;
+    }
+
+    summary {
+      min-height: 40px;
+      padding: 10px 12px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .compact-only {
+      margin-top: 8px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      gap: 12px;
+    }
+
     .notice {
       padding: 10px 12px;
       color: #e5d492;
@@ -484,18 +516,75 @@
 
     @media (min-width: 720px) {
       .app {
-        padding-inline: 24px;
+        padding-inline: 28px;
       }
 
       .stats {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
       }
 
       .content-grid {
         display: grid;
-        grid-template-columns: 330px 1fr;
-        gap: 14px;
+        grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+        gap: 16px;
         align-items: start;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: minmax(360px, 1.1fr) minmax(0, 1.4fr);
+        align-items: start;
+      }
+
+      .recommend-card,
+      .panel,
+      .idea {
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+      }
+
+      .stat {
+        min-height: 86px;
+        padding: 12px;
+      }
+
+      .stat strong {
+        font-size: 1.45rem;
+      }
+
+      .tab,
+      .primary,
+      .secondary,
+      input,
+      select {
+        min-height: 36px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .actions .secondary {
+        min-width: 0;
+        padding: 0 11px;
+      }
+
+      .list {
+        gap: 8px;
+      }
+
+      .idea-head {
+        align-items: center;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .view:not(#dashboard).active {
+        padding-top: 10px;
+      }
+
+      .content-grid {
+        grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
       }
     }
   </style>
@@ -514,35 +603,40 @@
     </header>
 
     <nav class="tabs" aria-label="Hauptbereiche">
-      <button class="tab active" data-view="dashboard" type="button">Dashboard</button>
+      <button class="tab active" data-view="dashboard" type="button">Heute</button>
       <button class="tab" data-view="ideas" type="button">Ideen</button>
-      <button class="tab" data-view="planner" type="button">Planer</button>
-      <button class="tab" data-view="analytics" type="button">Stats</button>
-      <button class="tab" data-view="generator" type="button">Generator</button>
+      <button class="tab" data-view="planner" type="button">Pipeline</button>
+      <button class="tab" data-view="analytics" type="button">Statistik</button>
       <button class="tab" data-view="vault" type="button">Vault</button>
     </nav>
 
     <section id="dashboard" class="view active">
-      <div class="recommend-card">
-        <h2>Heute posten</h2>
-        <button class="primary" id="todayCoachButton" type="button">Was soll ich heute posten?</button>
-        <div class="list" id="todayRecommendation"></div>
+      <div class="dashboard-grid">
+        <div>
+          <div class="recommend-card">
+            <h2>Heute posten</h2>
+            <button class="primary" id="todayCoachButton" type="button">Was soll ich heute posten?</button>
+            <div class="list" id="todayRecommendation"></div>
+          </div>
+          <div class="quick-actions">
+            <button class="secondary" data-jump="ideas" type="button">Neue Idee</button>
+            <button class="secondary" data-jump="analytics" type="button">Neue Statistik</button>
+            <button class="secondary" data-jump="ideas" type="button">Idee generieren</button>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title">Dashboard</h2>
+          <div class="grid stats" id="stats"></div>
+          <h2 class="section-title">Pipeline Kurzstatus</h2>
+          <div class="grid stats" id="pipelineStats"></div>
+          <h2 class="section-title">Top-Empfehlung</h2>
+          <div class="analysis-list" id="coachList"></div>
+        </div>
       </div>
-      <div class="grid stats" id="stats"></div>
-      <h2 class="section-title">Pipeline</h2>
-      <div class="grid stats" id="pipelineStats"></div>
-      <h2 class="section-title">Dashboard Coach</h2>
-      <div class="analysis-list" id="coachList"></div>
-      <h2 class="section-title">Top Reels</h2>
-      <div class="analysis-list" id="topReels"></div>
-      <h2 class="section-title">Kategorieanalyse</h2>
-      <div class="analysis-list" id="categoryAnalysis"></div>
-      <h2 class="section-title">Hook Analyse</h2>
-      <div class="analysis-list" id="hookAnalysis"></div>
-      <div class="panel">
-        <h2>Naechste Reels</h2>
-        <div class="list" id="nextReels"></div>
-      </div>
+      <div id="dashboardTopReels" hidden></div>
+      <div id="dashboardCategoryAnalysis" hidden></div>
+      <div id="dashboardHookAnalysis" hidden></div>
+      <div id="nextReels" hidden></div>
     </section>
 
     <section id="ideas" class="view">
@@ -557,7 +651,9 @@
             Notizen
             <textarea id="notes" maxlength="600" placeholder="Script, Shotlist, CTA"></textarea>
           </label>
-          <div class="row">
+          <details>
+            <summary>Mehr Optionen</summary>
+          <div class="row compact-only">
             <label>
               Vault Hook
               <select id="ideaHookTemplate"></select>
@@ -604,10 +700,15 @@
             Geplantes Datum
             <input id="date" type="date">
           </label>
+          </details>
           <button class="primary" type="submit">Speichern</button>
         </form>
 
         <div>
+          <details>
+            <summary>Ideen-Generator</summary>
+            <div class="compact-only" id="generatorMount"></div>
+          </details>
           <div class="filters" id="filters"></div>
           <div class="list" id="ideaList"></div>
         </div>
@@ -619,7 +720,7 @@
       <div class="list" id="plannerList"></div>
     </section>
 
-    <section id="generator" class="view">
+    <section id="generator" class="view" hidden>
       <div class="content-grid">
         <form class="panel form" id="generatorForm">
           <h2>Reel-Ideen-Generator</h2>
@@ -713,21 +814,17 @@
               <input id="statsHook" autocomplete="off" maxlength="120" placeholder="Erste 2 Sekunden">
             </label>
             <label>
-              Song
-              <input id="statsSong" autocomplete="off" maxlength="90" placeholder="Audio / Trend">
+              Hook-Typ
+              <select id="statsHookType">
+                <option>Fehler</option>
+                <option>Tutorial</option>
+                <option>Motivation</option>
+                <option>Transformation</option>
+                <option>Provokation</option>
+                <option>Sonstiges</option>
+              </select>
             </label>
           </div>
-          <label>
-            Hook-Typ
-            <select id="statsHookType">
-              <option>Fehler</option>
-              <option>Tutorial</option>
-              <option>Motivation</option>
-              <option>Transformation</option>
-              <option>Provokation</option>
-              <option>Sonstiges</option>
-            </select>
-          </label>
           <div class="row">
             <label>
               Views
@@ -748,7 +845,9 @@
               <input id="statsSaves" type="number" min="0" inputmode="numeric" value="0">
             </label>
           </div>
-          <div class="row">
+          <details>
+            <summary>Mehr Optionen</summary>
+          <div class="row compact-only">
             <label>
               Shares
               <input id="statsShares" type="number" min="0" inputmode="numeric" value="0">
@@ -758,6 +857,10 @@
               <input id="statsFollowers" type="number" min="0" inputmode="numeric" value="0">
             </label>
           </div>
+          <label>
+            Song
+            <input id="statsSong" autocomplete="off" maxlength="90" placeholder="Audio / Trend">
+          </label>
           <label>
             Warum lief es gut/schlecht?
             <textarea id="statsNote" maxlength="700" placeholder="Hook, Thema, Timing, Schnitt, CTA"></textarea>
@@ -769,10 +872,20 @@
           <img class="preview" id="screenshotPreview" alt="Screenshot-Vorschau">
           <p class="notice" id="screenshotHint">Automatisches Auslesen kommt später per OCR/AI.</p>
           <button class="secondary" id="readScreenshot" type="button">Daten aus Screenshot auslesen</button>
+          </details>
           <button class="primary" type="submit">Statistik speichern</button>
         </form>
 
         <div>
+          <details>
+            <summary>Erweiterte Analysen</summary>
+            <h2 class="section-title">Top 5 Reels</h2>
+            <div class="analysis-list" id="topReels"></div>
+            <h2 class="section-title">Kategorieanalyse</h2>
+            <div class="analysis-list" id="categoryAnalysis"></div>
+            <h2 class="section-title">Hookanalyse</h2>
+            <div class="analysis-list" id="hookAnalysis"></div>
+          </details>
           <div class="list" id="statsList"></div>
         </div>
       </div>
@@ -780,8 +893,8 @@
   </main>
 
   <script>
-    const STORAGE_KEY = "social-media-app-v0_6";
-    const LEGACY_STORAGE_KEY = "social-media-app-v0_5";
+    const STORAGE_KEY = "social-media-app-v0_8";
+    const LEGACY_STORAGE_KEY = "social-media-app-v0_7";
     const SCREENSHOT_MAX_BYTES = 750 * 1024;
     const statuses = ["Idee", "Skript", "Gefilmt", "Geschnitten", "Geplant", "Hochgeladen"];
     const categories = ["Alle", "Push", "Pull", "Legs", "Oberkörper", "Arme", "Lifestyle", "Motivation", "Fitness", "Food", "Behind the Scenes", "Education", "Personal"];
@@ -805,6 +918,7 @@
       form: document.getElementById("ideaForm"),
       statsForm: document.getElementById("statsForm"),
       generatorForm: document.getElementById("generatorForm"),
+      generatorMount: document.getElementById("generatorMount"),
       vaultForm: document.getElementById("vaultForm"),
       todayCoachButton: document.getElementById("todayCoachButton"),
       todayRecommendation: document.getElementById("todayRecommendation"),
@@ -855,6 +969,11 @@
       nextReels: document.getElementById("nextReels"),
       statsList: document.getElementById("statsList")
     };
+
+    if (els.generatorMount && els.generatorForm) {
+      els.generatorMount.appendChild(els.generatorForm);
+      els.generatorMount.appendChild(els.generatorList);
+    }
 
     function loadState() {
       try {
@@ -1221,15 +1340,21 @@
           <span class="badge">${escapeHtml(item.category)}</span>
           <span class="badge">${item.date ? formatDate(item.date) : "Ohne Datum"}</span>
         </div>
-        <p class="notes">${escapeHtml(item.notes || "Keine Notizen")}</p>
-        ${item.hook ? `<p class="notes">Hook: ${escapeHtml(item.hook)}</p>` : ""}
-        ${item.caption ? `<p class="notes">Caption: ${escapeHtml(item.caption)}</p>` : ""}
-        ${item.cta ? `<p class="notes">CTA: ${escapeHtml(item.cta)}</p>` : ""}
-        ${item.hashtags ? `<p class="notes">Hashtags: ${escapeHtml(item.hashtags)}</p>` : ""}
-        <div class="actions">
-          <button class="secondary" type="button" data-action="next">Weiter</button>
-          <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
-        </div>
+        <details>
+          <summary>Details anzeigen</summary>
+          <p class="notes compact-only">${escapeHtml(item.notes || "Keine Notizen")}</p>
+          ${item.hook ? `<p class="notes">Hook: ${escapeHtml(item.hook)}</p>` : ""}
+          ${item.caption ? `<p class="notes">Caption: ${escapeHtml(item.caption)}</p>` : ""}
+          ${item.cta ? `<p class="notes">CTA: ${escapeHtml(item.cta)}</p>` : ""}
+          ${item.hashtags ? `<p class="notes">Hashtags: ${escapeHtml(item.hashtags)}</p>` : ""}
+        </details>
+        <details class="compact-only">
+          <summary>Aktionen</summary>
+          <div class="actions">
+            <button class="secondary" type="button" data-action="next">Weiter</button>
+            <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
+          </div>
+        </details>
       `;
       article.querySelector('[data-action="next"]').addEventListener("click", () => advanceStatus(item.id));
       article.querySelector('[data-action="delete"]').addEventListener("click", () => deleteItem(item.id));
@@ -1248,7 +1373,6 @@
           <span class="badge">${escapeHtml(stat.category)}</span>
           <span class="badge">${escapeHtml(stat.hookType || "Sonstiges")}</span>
           <span class="badge">${stat.date ? formatDate(stat.date) : "Ohne Datum"}</span>
-          <span class="badge">${escapeHtml(stat.song || "Kein Song")}</span>
         </div>
         ${stat.screenshotData ? `<img class="screenshot" src="${escapeHtml(stat.screenshotData)}" alt="Gespeicherter Reel-Screenshot">` : ""}
         <p class="notes">${escapeHtml(stat.hook || "Keine Hook notiert")}</p>
@@ -1406,13 +1530,16 @@
           <h3>${escapeHtml(item.title)}</h3>
           <span class="badge status">${escapeHtml(item.type)}</span>
         </div>
-        <p class="notes">${escapeHtml(item.text)}</p>
-        <div class="actions">
-          <button class="secondary" type="button" data-action="use">Uebernehmen</button>
-          <button class="secondary" type="button" data-action="copy">Kopieren</button>
-          <button class="secondary" type="button" data-action="edit">Bearbeiten</button>
-          <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
-        </div>
+        <details>
+          <summary>Details und Aktionen</summary>
+          <p class="notes compact-only">${escapeHtml(item.text)}</p>
+          <div class="actions">
+            <button class="secondary" type="button" data-action="use">Uebernehmen</button>
+            <button class="secondary" type="button" data-action="copy">Kopieren</button>
+            <button class="secondary" type="button" data-action="edit">Bearbeiten</button>
+            <button class="secondary danger" type="button" data-action="delete">Loeschen</button>
+          </div>
+        </details>
       `;
       article.querySelector('[data-action="use"]').addEventListener("click", () => applyVaultItem(item));
       article.querySelector('[data-action="copy"]').addEventListener("click", () => copyVaultText(item.text));
@@ -1729,6 +1856,10 @@
 
     els.tabs.forEach((tab) => {
       tab.addEventListener("click", () => setView(tab.dataset.view));
+    });
+
+    document.querySelectorAll("[data-jump]").forEach((button) => {
+      button.addEventListener("click", () => setView(button.dataset.jump));
     });
 
     els.todayCoachButton.addEventListener("click", () => {
