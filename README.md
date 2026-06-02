@@ -4,17 +4,19 @@ Mobile-first Web-App zur lokalen Planung von Social-Media-Ideen und Reels.
 
 ## Version
 
-Aktuelle Testversion: `v0.8`
+Aktuelle Testversion: `v0.9`
 
 Datei:
 
-`01_APP/tests/social-media-app-v0_8-test.html`
+`01_APP/tests/social-media-app-v0_9-test.html`
 
 Vorversion:
 
-`01_APP/tests/social-media-app-v0_7-test.html`
+`01_APP/tests/social-media-app-v0_8-test.html`
 
 Weitere Vorversionen:
+
+`01_APP/tests/social-media-app-v0_7-test.html`
 
 `01_APP/tests/social-media-app-v0_6-test.html`
 
@@ -27,6 +29,25 @@ Weitere Vorversionen:
 `01_APP/tests/social-media-app-v0_2-test.html`
 
 `01_APP/tests/social-media-app-v0_1-test.html`
+
+## Funktionen v0.9
+
+- Clean-MVP-Version ohne neue Kernfeatures
+- Keine Demo-Daten, Beispielzahlen oder Fake-Empfehlungen
+- Leere Zustaende statt unsicherer Analysen
+- Startseite mit drei Aktionen: Neue Idee, Neue Statistik, Pipeline ansehen
+- Neue Idee speichern
+- Pipeline-Status: Idee, Gefilmt, Geschnitten, Geplant, Hochgeladen
+- Neue Reel-Statistik mit Titel, Datum, Kategorie, Views, Likes, Kommentaren, Saves, Shares und Followergewinn
+- Einfache Uebersicht mit Anzahl Ideen, geplanten Posts und veroeffentlichten Reels
+- Gesamtviews nur bei vorhandenen echten Reel-Statistiken
+- Heute-posten-Hinweis nur bei zu wenig Daten; Empfehlung erst ab mehreren gespeicherten Reels
+- Generator und Vault bewusst eingeklappt/deaktiviert
+- Migration aus v0.8, bekannte Demo-Seeds werden nicht in v0.9 uebernommen
+- Ungueltige oder leere Zahlen werden als 0 behandelt
+- Statistiken nutzen nur gespeicherte Reel-Daten
+- Dunkles Premium-Design mit Gold/Anthrazit
+- Mobile-first und ruhiger Desktop-Container
 
 ## Funktionen v0.8
 
@@ -76,7 +97,7 @@ Weitere Vorversionen:
 
 - Keine externen Abhaengigkeiten
 - Alles in einer HTML-Datei
-- Storage-Key: `social-media-app-v0_8`
-- v0.7-Daten werden beim ersten Laden der v0.8 moeglichst uebernommen
+- Storage-Key: `social-media-app-v0_9`
+- v0.8-Daten werden beim ersten Laden der v0.9 moeglichst uebernommen
 - OCR/AI ist noch nicht angebunden; Screenshot-Daten werden nicht automatisch ausgelesen
 - Keine Verbindung zu Personal-App, Public-App oder Apps-Script

@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.9 - 2026-06-02
+
+- Neue Testversion `social-media-app-v0_9-test.html` als Clean-MVP-Version erstellt.
+- App stark vereinfacht: Startseite mit Neue Idee, Neue Statistik und Pipeline ansehen.
+- Keine Demo-Daten, Beispielzahlen oder Fake-Empfehlungen in v0.9.
+- Erweiterte Analysen, Hook-Auswertungen, dominante Generator-Ansicht und Vault-Oberflaeche entfernt bzw. eingeklappt/deaktiviert.
+- Einfache Uebersicht mit Anzahl Ideen, geplanten Posts, veroeffentlichten Reels und Gesamtviews nur bei echten Reel-Stats.
+- Heute-posten-Empfehlung wird erst bei ausreichend gespeicherten Reels angezeigt.
+- Leere Zustaende klar formuliert, z. B. `Noch keine Reels eingetragen.`
+- Storage-Key auf `social-media-app-v0_9` umgestellt.
+- Migration aus `social-media-app-v0_8` integriert; bekannte Demo-Seeds werden nicht uebernommen.
+- `index.html` nicht aktualisiert.
+
 ## v0.8 - 2026-06-01
 
 - Neue Testversion `social-media-app-v0_8-test.html` aus v0.7 erstellt.
