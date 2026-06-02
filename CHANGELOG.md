@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.1 - 2026-06-02
+
+- Neue Testversion `social-media-app-v0_9_1-test.html` aus v0.9 erstellt.
+- iPhone/Safari-Fokus-Zoom bei Formularfeldern behoben.
+- `input`, `textarea` und `select` explizit auf `font-size: 16px` gesetzt.
+- Keine `user-scalable=no`-Loesung und kein deaktivierter Zoom.
+- Storage-Key bleibt `social-media-app-v0_9`, da sich das Datenmodell nicht aendert.
+
 ## v0.9 - 2026-06-02
 
 - Neue Testversion `social-media-app-v0_9-test.html` als Clean-MVP-Version erstellt.

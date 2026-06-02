@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0F1115">
+  <title>Social Media App v0.9 Clean MVP</title>
+  <style>
+    :root {
+      --bg: #0F1115;
+      --panel: #1A1D24;
+      --panel-2: #20242D;
+      --line: rgba(255,255,255,.09);
+      --text: #F5F3EC;
+      --muted: #A9ABB3;
+      --gold: #D4AF37;
+      --gold-soft: rgba(212,175,55,.16);
+      --danger: #B96A65;
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
+      --radius: 18px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--text); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.05), transparent 260px),
+        var(--bg);
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 18px 14px 88px;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 2px 18px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(26px, 5vw, 42px); letter-spacing: 0; line-height: 1.05; }
+    h2 { font-size: 20px; margin-bottom: 12px; }
+    h3 { font-size: 16px; }
+    .sub { color: var(--muted); margin-top: 8px; font-size: 14px; line-height: 1.45; }
+    .badge {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--gold);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .tabs {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(15,17,21,.92);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--line);
+    }
+    .tab {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+    .tab.active {
+      border-color: rgba(212,175,55,.55);
+      background: var(--gold-soft);
+      color: var(--text);
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+    .grid { display: grid; gap: 12px; }
+    .grid.two { grid-template-columns: 1fr; }
+    .grid.three { grid-template-columns: 1fr; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .quiet {
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .btn, .icon-btn {
+      min-height: 46px;
+      border: 0;
+      border-radius: 14px;
+      padding: 0 16px;
+      background: var(--gold);
+      color: #121212;
+      font-weight: 750;
+    }
+    .btn.secondary {
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 650;
+    }
+    .btn.danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid rgba(185,106,101,.35);
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .stat-card {
+      min-height: 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .stat-card strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      margin-top: 12px;
+      color: var(--gold);
+    }
+    .stat-card span { color: var(--muted); font-size: 13px; }
+
+    form { display: grid; gap: 12px; }
+    label { display: grid; gap: 7px; color: var(--muted); font-size: 13px; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #12151B;
+      color: var(--text);
+      font-size: 16px;
+      padding: 12px 13px;
+      outline: none;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(212,175,55,.6);
+      box-shadow: 0 0 0 3px rgba(212,175,55,.12);
+    }
+    .inline-fields {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .list { display: grid; gap: 10px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+    }
+    .chip.gold { color: var(--gold); background: var(--gold-soft); border-color: rgba(212,175,55,.35); }
+    .card p { color: var(--muted); line-height: 1.45; font-size: 14px; margin-top: 10px; }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .small-btn {
+      min-height: 36px;
+      border-radius: 11px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 13px;
+    }
+    .empty {
+      border: 1px dashed rgba(255,255,255,.18);
+      color: var(--muted);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      line-height: 1.45;
+    }
+    details {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.03);
+    }
+    summary { cursor: pointer; color: var(--gold); font-weight: 700; }
+    details .inner { margin-top: 12px; }
+
+    @media (min-width: 720px) {
+      .app { padding: 28px 22px 110px; }
+      .grid.two { grid-template-columns: 1fr 1fr; }
+      .grid.three { grid-template-columns: repeat(3, 1fr); }
+      .actions { grid-template-columns: repeat(3, 1fr); }
+      .inline-fields { grid-template-columns: repeat(2, 1fr); }
+      .tabs {
+        position: sticky;
+        top: 0;
+        bottom: auto;
+        border-top: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Social Media Tracker</h1>
+        <p class="sub">Clean MVP v0.9. Nur echte gespeicherte Daten, keine Beispielzahlen.</p>
+      </div>
+      <div class="badge">v0.9</div>
+    </header>
+
+    <main>
+      <section class="view active" id="today">
+        <div class="panel">
+          <h2>Heute</h2>
+          <div class="actions">
+            <button class="btn" data-jump="ideas" type="button">Neue Idee</button>
+            <button class="btn secondary" data-jump="stats" type="button">Neue Statistik</button>
+            <button class="btn secondary" data-jump="pipeline" type="button">Pipeline ansehen</button>
+          </div>
+          <div class="grid three" id="overview"></div>
+          <div class="quiet" id="coachBox"></div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <h2>Letzte Einträge</h2>
+          <div class="list" id="recentList"></div>
+        </div>
+      </section>
+
+      <section class="view" id="ideas">
+        <div class="grid two">
+          <form class="panel" id="ideaForm">
+            <h2>Neue Idee</h2>
+            <label>Titel
+              <input id="ideaTitle" maxlength="120" required autocomplete="off" placeholder="Reel-Idee">
+            </label>
+            <label>Kategorie
+              <select id="ideaCategory"></select>
+            </label>
+            <label>Notiz
+              <textarea id="ideaNotes" maxlength="700" placeholder="Hook, Ablauf oder Stichpunkte"></textarea>
+            </label>
+            <button class="btn" type="submit">Idee speichern</button>
+          </form>
+
+          <div class="panel">
+            <h2>Ideen</h2>
+            <div class="list" id="ideaList"></div>
+          </div>
+        </div>
+
+        <details style="margin-top:12px">
+          <summary>Generator und Vault</summary>
+          <div class="inner quiet">In v0.9 bewusst eingeklappt/deaktiviert. Die Clean-MVP-Version nutzt keine generierten Inhalte und keine Vorlagen, damit keine unechten Empfehlungen entstehen.</div>
+        </details>
+      </section>
+
+      <section class="view" id="pipeline">
+        <div class="panel">
+          <h2>Pipeline</h2>
+          <div class="grid three" id="pipelineOverview"></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h2>Beiträge</h2>
+          <div class="list" id="pipelineList"></div>
+        </div>
+      </section>
+
+      <section class="view" id="stats">
+        <div class="grid two">
+          <form class="panel" id="statsForm">
+            <h2>Neue Reel-Statistik</h2>
+            <label>Titel
+              <input id="statsTitle" maxlength="120" required autocomplete="off" placeholder="Veröffentlichtes Reel">
+            </label>
+            <div class="inline-fields">
+              <label>Datum
+                <input id="statsDate" type="date" required>
+              </label>
+              <label>Kategorie
+                <select id="statsCategory"></select>
+              </label>
+            </div>
+            <div class="inline-fields">
+              <label>Views
+                <input id="views" type="number" min="0" inputmode="numeric" value="0">
+              </label>
+              <label>Likes
+                <input id="likes" type="number" min="0" inputmode="numeric" value="0">
+              </label>
+              <label>Kommentare
+                <input id="comments" type="number" min="0" inputmode="numeric" value="0">
+              </label>
+              <label>Saves
+                <input id="saves" type="number" min="0" inputmode="numeric" value="0">
+              </label>
+              <label>Shares
+                <input id="shares" type="number" min="0" inputmode="numeric" value="0">
+              </label>
+              <label>Followergewinn
+                <input id="followers" type="number" min="0" inputmode="numeric" value="0">
+              </label>
+            </div>
+            <button class="btn" type="submit">Statistik speichern</button>
+          </form>
+
+          <div class="panel">
+            <h2>Statistik</h2>
+            <div class="grid two" id="statsOverview"></div>
+            <div class="list" id="statsList" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="tabs" aria-label="Navigation">
+    <button class="tab active" data-view="today" type="button">Heute</button>
+    <button class="tab" data-view="ideas" type="button">Ideen</button>
+    <button class="tab" data-view="pipeline" type="button">Pipeline</button>
+    <button class="tab" data-view="stats" type="button">Statistik</button>
+  </nav>
+
+  <script>
+    const STORAGE_KEY = "social-media-app-v0_9";
+    const LEGACY_STORAGE_KEY = "social-media-app-v0_8";
+    const statuses = ["Idee", "Gefilmt", "Geschnitten", "Geplant", "Hochgeladen"];
+    const categories = ["Push", "Pull", "Legs", "Oberkörper", "Arme", "Lifestyle", "Motivation", "Fitness", "Food", "Education", "Personal"];
+    const demoItemTitles = new Set(["3 Fehler beim Meal Prep", "Gym Tasche packen als Reel"]);
+    const demoStatTitles = new Set(["Protein-Fruehstueck in 30 Sekunden", "Protein-Frühstück in 30 Sekunden"]);
+
+    let state = loadState();
+    let items = state.items;
+    let reelStats = state.reelStats;
+
+    const els = {
+      tabs: document.querySelectorAll(".tab"),
+      views: document.querySelectorAll(".view"),
+      overview: document.getElementById("overview"),
+      coachBox: document.getElementById("coachBox"),
+      recentList: document.getElementById("recentList"),
+      ideaForm: document.getElementById("ideaForm"),
+      ideaTitle: document.getElementById("ideaTitle"),
+      ideaCategory: document.getElementById("ideaCategory"),
+      ideaNotes: document.getElementById("ideaNotes"),
+      ideaList: document.getElementById("ideaList"),
+      pipelineOverview: document.getElementById("pipelineOverview"),
+      pipelineList: document.getElementById("pipelineList"),
+      statsForm: document.getElementById("statsForm"),
+      statsTitle: document.getElementById("statsTitle"),
+      statsDate: document.getElementById("statsDate"),
+      statsCategory: document.getElementById("statsCategory"),
+      viewsInput: document.getElementById("views"),
+      likesInput: document.getElementById("likes"),
+      commentsInput: document.getElementById("comments"),
+      savesInput: document.getElementById("saves"),
+      sharesInput: document.getElementById("shares"),
+      followersInput: document.getElementById("followers"),
+      statsOverview: document.getElementById("statsOverview"),
+      statsList: document.getElementById("statsList")
+    };
+
+    function loadState() {
+      try {
+        const current = localStorage.getItem(STORAGE_KEY);
+        if (current) return normalizeState(JSON.parse(current), false);
+        const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (legacy) {
+          const migrated = normalizeState(JSON.parse(legacy), true);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+          return migrated;
+        }
+      } catch (error) {
+        console.warn("Storage konnte nicht gelesen werden.", error);
+      }
+      return { items: [], reelStats: [], vault: [] };
+    }
+
+    function normalizeState(value, fromLegacy) {
+      if (Array.isArray(value)) {
+        return { items: value.map(normalizeItem).filter(Boolean), reelStats: [], vault: [] };
+      }
+      const normalizedItems = Array.isArray(value?.items) ? value.items.map(normalizeItem).filter(Boolean) : [];
+      const normalizedStats = Array.isArray(value?.reelStats) ? value.reelStats.map(normalizeStat).filter(Boolean) : [];
+      return {
+        items: fromLegacy ? normalizedItems.filter((item) => !demoItemTitles.has(item.title)) : normalizedItems,
+        reelStats: fromLegacy ? normalizedStats.filter((stat) => !demoStatTitles.has(stat.title)) : normalizedStats,
+        vault: Array.isArray(value?.vault) ? value.vault : []
+      };
+    }
+
+    function normalizeItem(item) {
+      if (!item || typeof item !== "object") return null;
+      const title = String(item.title || "").trim();
+      if (!title) return null;
+      const status = statuses.includes(item.status) ? item.status : "Idee";
+      return {
+        id: item.id || safeId(),
+        title,
+        notes: String(item.notes || item.hook || "").trim(),
+        category: normalizeCategory(item.category),
+        status,
+        date: String(item.date || "").trim(),
+        createdAt: Number(item.createdAt) || Date.now()
+      };
+    }
+
+    function normalizeStat(stat) {
+      if (!stat || typeof stat !== "object") return null;
+      const title = String(stat.title || "").trim();
+      if (!title) return null;
+      return {
+        id: stat.id || safeId(),
+        title,
+        date: String(stat.date || "").trim(),
+        category: normalizeCategory(stat.category),
+        views: toNumber(stat.views),
+        likes: toNumber(stat.likes),
+        comments: toNumber(stat.comments),
+        saves: toNumber(stat.saves),
+        shares: toNumber(stat.shares),
+        followers: toNumber(stat.followers),
+        createdAt: Number(stat.createdAt) || Date.now()
+      };
+    }
+
+    function safeId() {
+      return crypto?.randomUUID ? crypto.randomUUID() : "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+    }
+
+    function normalizeCategory(value) {
+      const text = String(value || "").trim();
+      return categories.includes(text) ? text : "Fitness";
+    }
+
+    function toNumber(value) {
+      const number = Number(value);
+      return Number.isFinite(number) && number > 0 ? Math.round(number) : 0;
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, reelStats, vault: state.vault || [] }));
+      render();
+    }
+
+    function setView(name) {
+      els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.view === name));
+      els.views.forEach((view) => view.classList.toggle("active", view.id === name));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function publishedStats() {
+      return reelStats.filter((stat) => stat.title && stat.date);
+    }
+
+    function totalViews() {
+      return publishedStats().reduce((sum, stat) => sum + toNumber(stat.views), 0);
+    }
+
+    function plannedCount() {
+      return items.filter((item) => item.status === "Geplant").length;
+    }
+
+    function publishedCount() {
+      return publishedStats().length;
+    }
+
+    function renderOverview() {
+      const cards = [
+        ["Ideen", items.length, "gespeicherte Content-Ideen"],
+        ["Geplant", plannedCount(), "Posts mit Status Geplant"],
+        ["Veröffentlicht", publishedCount(), "eingetragene Reel-Stats"]
+      ];
+      if (publishedCount() > 0) cards.push(["Gesamtviews", formatNumber(totalViews()), "nur aus echten Reel-Stats"]);
+      els.overview.innerHTML = cards.map(statCard).join("");
+    }
+
+    function renderCoach() {
+      const stats = publishedStats();
+      if (stats.length < 3) {
+        els.coachBox.textContent = "Trage erst ein paar Reels ein, dann kann die App Empfehlungen geben.";
+        return;
+      }
+      const bestCategory = bestCategoryByViews(stats);
+      const planned = items.find((item) => item.status === "Geplant" && item.category === bestCategory)
+        || items.find((item) => item.status === "Geplant");
+      els.coachBox.innerHTML = planned
+        ? `<strong>Heute posten:</strong> ${escapeHtml(planned.title)}<br><span>Grundlage: ${escapeHtml(bestCategory)} hat in deinen gespeicherten Reels aktuell die meisten durchschnittlichen Views.</span>`
+        : `<strong>Heute posten:</strong> Plane einen Beitrag aus ${escapeHtml(bestCategory)}.<br><span>Grundlage: mindestens drei gespeicherte Reels mit echten Statistikdaten.</span>`;
+    }
+
+    function bestCategoryByViews(stats) {
+      const groups = new Map();
+      stats.forEach((stat) => {
+        const current = groups.get(stat.category) || { total: 0, count: 0 };
+        current.total += toNumber(stat.views);
+        current.count += 1;
+        groups.set(stat.category, current);
+      });
+      return [...groups.entries()]
+        .map(([category, data]) => ({ category, average: data.count ? data.total / data.count : 0 }))
+        .sort((a, b) => b.average - a.average)[0]?.category || "Fitness";
+    }
+
+    function renderRecent() {
+      const recent = [
+        ...items.map((item) => ({ type: "Idee", time: item.createdAt, title: item.title, detail: `${item.category} · ${item.status}` })),
+        ...reelStats.map((stat) => ({ type: "Statistik", time: stat.createdAt, title: stat.title, detail: `${stat.category} · ${formatNumber(stat.views)} Views` }))
+      ].sort((a, b) => b.time - a.time).slice(0, 6);
+      renderList(els.recentList, recent, "Noch keine Einträge vorhanden.", (entry) => `
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>${escapeHtml(entry.title)}</h3>
+              <div class="meta"><span class="chip gold">${entry.type}</span><span class="chip">${escapeHtml(entry.detail)}</span></div>
+            </div>
+          </div>
+        </article>
+      `);
+    }
+
+    function renderIdeas() {
+      renderList(els.ideaList, items.filter((item) => item.status === "Idee"), "Noch keine Ideen gespeichert.", itemCard);
+    }
+
+    function renderPipeline() {
+      els.pipelineOverview.innerHTML = statuses.map((status) => statCard([status, items.filter((item) => item.status === status).length, "Pipeline-Status"])).join("");
+      renderList(els.pipelineList, items, "Noch keine Pipeline-Einträge vorhanden.", itemCard);
+    }
+
+    function renderStats() {
+      const stats = publishedStats();
+      const cards = [
+        ["Reels", stats.length, "gespeicherte Veröffentlichungen"]
+      ];
+      if (stats.length > 0) {
+        cards.push(["Gesamtviews", formatNumber(totalViews()), "aus gespeicherten Reel-Stats"]);
+      }
+      els.statsOverview.innerHTML = cards.map(statCard).join("");
+      renderList(els.statsList, stats.sort((a, b) => (b.date || "").localeCompare(a.date || "")), "Noch keine Reels eingetragen.", statCardFull);
+    }
+
+    function itemCard(item) {
+      return `
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>${escapeHtml(item.title)}</h3>
+              <div class="meta">
+                <span class="chip gold">${escapeHtml(item.status)}</span>
+                <span class="chip">${escapeHtml(item.category)}</span>
+                ${item.date ? `<span class="chip">${escapeHtml(formatDate(item.date))}</span>` : ""}
+              </div>
+            </div>
+          </div>
+          ${item.notes ? `<p>${escapeHtml(item.notes)}</p>` : ""}
+          <div class="card-actions">
+            ${nextStatus(item.status) ? `<button class="small-btn" type="button" data-advance="${item.id}">Weiter zu ${nextStatus(item.status)}</button>` : ""}
+            <button class="small-btn" type="button" data-remove-item="${item.id}">Löschen</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function statCardFull(stat) {
+      return `
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>${escapeHtml(stat.title)}</h3>
+              <div class="meta">
+                <span class="chip gold">${formatNumber(stat.views)} Views</span>
+                <span class="chip">${escapeHtml(stat.category)}</span>
+                <span class="chip">${escapeHtml(formatDate(stat.date))}</span>
+              </div>
+            </div>
+          </div>
+          <div class="meta">
+            <span class="chip">${formatNumber(stat.likes)} Likes</span>
+            <span class="chip">${formatNumber(stat.comments)} Kommentare</span>
+            <span class="chip">${formatNumber(stat.saves)} Saves</span>
+            <span class="chip">${formatNumber(stat.shares)} Shares</span>
+            <span class="chip">${formatNumber(stat.followers)} Follower</span>
+          </div>
+          <div class="card-actions">
+            <button class="small-btn" type="button" data-remove-stat="${stat.id}">Löschen</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function statCard([label, value, detail]) {
+      return `<div class="stat-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong><span>${escapeHtml(detail)}</span></div>`;
+    }
+
+    function renderList(container, entries, emptyText, renderer) {
+      if (!entries.length) {
+        container.innerHTML = `<div class="empty">${escapeHtml(emptyText)}</div>`;
+        return;
+      }
+      container.innerHTML = entries.map(renderer).join("");
+    }
+
+    function nextStatus(status) {
+      const index = statuses.indexOf(status);
+      return index >= 0 && index < statuses.length - 1 ? statuses[index + 1] : "";
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      return match ? `${match[3]}.${match[2]}.${match[1]}` : value;
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat("de-DE").format(toNumber(value));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[char]));
+    }
+
+    function render() {
+      renderOverview();
+      renderCoach();
+      renderRecent();
+      renderIdeas();
+      renderPipeline();
+      renderStats();
+    }
+
+    function fillSelects() {
+      const options = categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("");
+      els.ideaCategory.innerHTML = options;
+      els.statsCategory.innerHTML = options;
+    }
+
+    els.tabs.forEach((tab) => tab.addEventListener("click", () => setView(tab.dataset.view)));
+    document.querySelectorAll("[data-jump]").forEach((button) => {
+      button.addEventListener("click", () => setView(button.dataset.jump));
+    });
+
+    els.ideaForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      items = [{
+        id: safeId(),
+        title: els.ideaTitle.value.trim(),
+        notes: els.ideaNotes.value.trim(),
+        category: els.ideaCategory.value,
+        status: "Idee",
+        date: "",
+        createdAt: Date.now()
+      }, ...items];
+      els.ideaForm.reset();
+      save();
+      setView("today");
+    });
+
+    els.statsForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      reelStats = [{
+        id: safeId(),
+        title: els.statsTitle.value.trim(),
+        date: els.statsDate.value,
+        category: els.statsCategory.value,
+        views: toNumber(els.viewsInput.value),
+        likes: toNumber(els.likesInput.value),
+        comments: toNumber(els.commentsInput.value),
+        saves: toNumber(els.savesInput.value),
+        shares: toNumber(els.sharesInput.value),
+        followers: toNumber(els.followersInput.value),
+        createdAt: Date.now()
+      }, ...reelStats];
+      els.statsForm.reset();
+      els.viewsInput.value = 0;
+      els.likesInput.value = 0;
+      els.commentsInput.value = 0;
+      els.savesInput.value = 0;
+      els.sharesInput.value = 0;
+      els.followersInput.value = 0;
+      save();
+      setView("today");
+    });
+
+    document.addEventListener("click", (event) => {
+      const advanceId = event.target.dataset.advance;
+      const removeItemId = event.target.dataset.removeItem;
+      const removeStatId = event.target.dataset.removeStat;
+      if (advanceId) {
+        items = items.map((item) => item.id === advanceId ? { ...item, status: nextStatus(item.status) || item.status } : item);
+        save();
+      }
+      if (removeItemId) {
+        items = items.filter((item) => item.id !== removeItemId);
+        save();
+      }
+      if (removeStatId) {
+        reelStats = reelStats.filter((stat) => stat.id !== removeStatId);
+        save();
+      }
+    });
+
+    fillSelects();
+    render();
+  </script>
+</body>
+</html>
