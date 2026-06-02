@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.9.2 - 2026-06-02
+
+- Neue Testversion `social-media-app-v0_9_2-test.html` aus v0.9.1 erstellt.
+- Mobile-Safari-Zoom-Fix am Ende des CSS verstaerkt.
+- `input`, `textarea`, `select`, `.field`-Felder sowie `date`-, `number`- und `text`-Inputs explizit auf `font-size: 16px !important` gesetzt.
+- Mobile Formularfelder erhalten `min-height: 48px`.
+- `html` und Formularfelder nutzen `-webkit-text-size-adjust: 100%`.
+- Kein `user-scalable=no`, kein deaktivierter Zoom.
+- Storage-Key bleibt `social-media-app-v0_9`, da sich das Datenmodell nicht aendert.
+
 ## v0.9.1 - 2026-06-02
 
 - Neue Testversion `social-media-app-v0_9_1-test.html` aus v0.9 erstellt.

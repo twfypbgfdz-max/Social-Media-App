@@ -4,17 +4,19 @@ Mobile-first Web-App zur lokalen Planung von Social-Media-Ideen und Reels.
 
 ## Version
 
-Aktuelle Testversion: `v0.9.1`
+Aktuelle Testversion: `v0.9.2`
 
 Datei:
 
-`01_APP/tests/social-media-app-v0_9_1-test.html`
+`01_APP/tests/social-media-app-v0_9_2-test.html`
 
 Vorversion:
 
-`01_APP/tests/social-media-app-v0_9-test.html`
+`01_APP/tests/social-media-app-v0_9_1-test.html`
 
 Weitere Vorversionen:
+
+`01_APP/tests/social-media-app-v0_9-test.html`
 
 `01_APP/tests/social-media-app-v0_8-test.html`
 
@@ -31,6 +33,15 @@ Weitere Vorversionen:
 `01_APP/tests/social-media-app-v0_2-test.html`
 
 `01_APP/tests/social-media-app-v0_1-test.html`
+
+## Funktionen v0.9.2
+
+- Reine Mobile-Safari-Zoom-Fix-Version
+- Starker CSS-Override am Ende des Styles fuer `input`, `textarea`, `select`, `.field`-Felder sowie `date`-, `number`- und `text`-Inputs
+- Mobile Formularfelder haben mindestens `font-size: 16px !important` und `min-height: 48px`
+- Kein `user-scalable=no`, Zoom bleibt nutzerseitig moeglich
+- Keine Feature- oder Datenmodell-Aenderung
+- Storage-Key bleibt `social-media-app-v0_9`
 
 ## Funktionen v0.9.1
 
